@@ -59,7 +59,7 @@ La plateforme combine :
 ## 📊 Jeu de Données d'Entraînement (247 Bassins)
 
 Le jeu de données complet des **247 bassins versants ibériques** ayant servi à l'entraînement du modèle LSTM est documenté et hébergé sur un dépôt public séparé :
-👉 **[Accéder au Dépôt du Dataset des 247 Bassins Versants d'Entraînement](https://github.com/votre-compte/dataset-hydrologique-247-bassins-espagne.git)** *(Lien vers le dépôt du dataset)*
+👉 **[Accéder au Dépôt du Dataset des 247 Bassins Versants d'Entraînement](https://github.com/chawboiii/dataset-hydrologique-247-bassins-espagne)** *(Lien vers le dépôt du dataset)*
 
 Ce dépôt dédié comprend :
 * La matrice complète des 19 attributs physiographiques et hydroclimatiques.
