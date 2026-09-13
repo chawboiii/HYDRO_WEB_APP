@@ -3,9 +3,9 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-hydro-web-app-pfe-regional-lstm-secret-key'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-hydro-web-app-pfe-regional-lstm-secret-key')
 
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('true', '1', 't')
 
 ALLOWED_HOSTS = ['*']
 

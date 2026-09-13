@@ -5,8 +5,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
-WORKSPACE = r"c:\Users\Neweye\Desktop\GUADALQUIVIR data"
-os.chdir(WORKSPACE)
+from pathlib import Path
+
+# Workspace directory (defaults to repository 'data' folder or environment variable)
+WORKSPACE = os.environ.get("HYDRO_WORKSPACE", str(Path(__file__).resolve().parent.parent / "data"))
+if os.path.exists(WORKSPACE):
+    os.chdir(WORKSPACE)
 
 plt.style.use('seaborn-v0_8-whitegrid' if 'seaborn-v0_8-whitegrid' in plt.style.available else 'default')
 plt.rcParams['font.family'] = 'sans-serif'

@@ -43,6 +43,13 @@ env/
 .env
 .env.local
 
+# Base de donnees locale SQLite
+*.sqlite3
+db.sqlite3
+
+# Checkpoints Jupyter
+.ipynb_checkpoints/
+
 # OS Fichiers Caches
 .DS_Store
 Thumbs.db
