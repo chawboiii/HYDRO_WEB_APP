@@ -1,0 +1,10 @@
+nom,p_mean,pet_mean,aridity,frac_snow,p_seasonality,elev_mean,forest_frac,slope_mean,area_km2,verdict_enveloppe
+Ahmed El Hansali,1.734,3.489,2.012,0.034,1.253,1394.284,0.303,8.238,3354.662,"strate intermédiaire (KGE ~0,27)"
+Al Wahda,2.079,3.42,1.645,0.0,1.64,771.119,0.234,12.394,6148.56,"surface hors domaine ; strate intermédiaire (KGE ~0,27)"
+Aoulouz,0.725,3.59,4.955,0.005,1.406,1685.48,0.04,10.668,4446.58,surface hors domaine ; strate aride (KGE médian négatif)
+Bin el Ouidane,1.795,3.096,1.725,0.155,0.943,2026.926,0.175,13.527,6519.293,"surface hors domaine ; strate intermédiaire (KGE ~0,27)"
+Hassan Ier,1.937,2.991,1.544,0.131,0.696,2095.783,0.118,15.222,1681.657,"strate humide (KGE ~0,47)"
+Idriss Ier,1.594,3.543,2.223,0.0,1.436,698.289,0.191,8.781,3620.157,surface hors domaine ; strate aride (KGE médian négatif)
+Mansour Eddahbi,0.667,3.562,5.339,0.022,1.122,1812.88,0.007,8.301,14974.84,surface hors domaine ; strate aride (KGE médian négatif)
+Mohammed V,0.893,3.564,3.992,0.006,1.206,1195.52,0.026,3.854,50240.937,surface hors domaine ; strate aride (KGE médian négatif)
+Sidi Mohamed Ben Abdellah,1.47,3.697,2.514,0.0,1.458,678.262,0.111,6.746,9574.809,surface hors domaine ; strate aride (KGE médian négatif)

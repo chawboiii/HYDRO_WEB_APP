@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-[#faf8f5] text-slate-800">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}HYDRO_WEB_APP — Plateforme WebGIS & Deep Learning Hydrologique{% endblock %}</title>
+    
+    <!-- Meta SEO -->
+    <meta name="description" content="Plateforme WebGIS hydrologique pour la délinéation de bassins versants, extraction d'attributs physiques et simulation de débits par Deep Learning LSTM au Maroc.">
+    <meta name="keywords" content="Hydrologie, WebGIS, Deep Learning, LSTM, Délinéation, Maroc, HydroSHEDS, PyTorch">
+    
+    <!-- Fonts Google : Outfit & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons & Lucide Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://unpkg.com/lucide@0.344.0"></script>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        organic: {
+                            50: '#fdfbf7',
+                            100: '#f8f5ee',
+                            200: '#ede8dd',
+                            300: '#ddd4c2',
+                            600: '#786e58',
+                            800: '#383226',
+                            900: '#262117'
+                        },
+                        river: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985'
+                        },
+                        sage: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- HTMX 2.x -->
+    <script src="https://unpkg.com/htmx.org@2.0.0"></script>
+    
+    <!-- Alpine.js 3.x + Collapse Plugin -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.13.5/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.5/dist/cdn.min.js"></script>
+    
+    <!-- Chart.js 4.x -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <!-- Custom CSS Modern Organic -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+</head>
+<body class="h-full flex flex-col font-sans overflow-hidden select-none bg-[#faf8f5] text-slate-800" x-data="hydroApp()">
+    
+    <!-- Navbar Header Modern Organic -->
+    <header class="h-14 bg-white/95 backdrop-blur-md border-b border-[#e8e5df] px-4 flex items-center justify-between z-30 shrink-0 shadow-xs">
+        <div class="flex items-center space-x-3">
+            <!-- Bouton pour rétracter/déplier le panneau latéral -->
+            <button 
+                @click="toggleSidebar()" 
+                class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200/80 border border-slate-200 text-slate-600 hover:text-teal-800 flex items-center justify-center transition shadow-xs" 
+                :title="sidebarOpen ? 'Replier le volet pour maximiser la carte' : 'Déplier le volet latéral'"
+            >
+                <i class="fa-solid" :class="sidebarOpen ? 'fa-angles-left' : 'fa-angles-right'"></i>
+            </button>
+
+            <!-- Logo de l'application -->
+            <div class="flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-teal-600 via-teal-700 to-sky-600 flex items-center justify-center shadow-md shadow-teal-700/20 text-white">
+                    <i class="fa-solid fa-water text-sm"></i>
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="font-heading font-extrabold text-base tracking-tight bg-gradient-to-r from-teal-800 via-sky-800 to-blue-800 bg-clip-text text-transparent">HYDRO_WEB_APP</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-teal-50 border border-teal-200 text-teal-800 font-mono font-medium">LSTM Régional Maroc</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statut & Sélecteurs de Mode -->
+        <div class="flex items-center space-x-3">
+            <div class="hidden lg:flex items-center space-x-2 text-[11px] text-slate-500 bg-slate-50/80 px-3 py-1 rounded-full border border-slate-200">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 mr-1 animate-pulse"></span>
+                <span class="font-medium text-slate-700">Modèle PyTorch LSTM (Ép. 25, KGE 0.62)</span>
+                <span class="text-slate-300">•</span>
+                <span>HydroSHEDS D8 Maroc</span>
+                <span class="text-slate-300">•</span>
+                <span>9 Stations de Jaugeage</span>
+            </div>
+
+            <!-- Mode Selector Switch -->
+            <div class="flex items-center bg-slate-100/90 p-0.5 rounded-xl border border-slate-200 text-xs">
+                <button 
+                    @click="setMode('delineate')" 
+                    :class="activeMode === 'delineate' ? 'bg-white text-teal-900 shadow-xs font-semibold' : 'text-slate-500 hover:text-slate-800'" 
+                    class="px-3 py-1 rounded-lg transition-all flex items-center space-x-1.5"
+                >
+                    <i class="fa-solid fa-bullseye text-[11px]" :class="activeMode === 'delineate' ? 'text-teal-700' : 'text-slate-400'"></i>
+                    <span>Délinéation D8</span>
+                </button>
+                <button 
+                    @click="setMode('reference')" 
+                    :class="activeMode === 'reference' ? 'bg-white text-teal-900 shadow-xs font-semibold' : 'text-slate-500 hover:text-slate-800'" 
+                    class="px-3 py-1 rounded-lg transition-all flex items-center space-x-1.5"
+                >
+                    <i class="fa-solid fa-layer-group text-[11px]" :class="activeMode === 'reference' ? 'text-teal-700' : 'text-slate-400'"></i>
+                    <span>9 Stations Clés</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="flex-1 flex overflow-hidden relative">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Custom App JS with Cache-Busting -->
+    <script src="/static/js/app.js?v=20260913_v3"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

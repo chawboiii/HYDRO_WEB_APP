@@ -1,0 +1,113 @@
+<!-- Composant d'Audit Hydrologique & d'Influence Anthropique (Modern Organic Maroc) -->
+<div x-data="{ open: true }" class="bg-white border border-[#e8e5df] rounded-2xl p-3 shadow-xs transition-all">
+    
+    <!-- En-tête de la Carte avec Badge Dynamique de Régime -->
+    <div class="flex items-center justify-between cursor-pointer select-none" @click="open = !open">
+        <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-water-ladder text-teal-700 text-xs"></i>
+            <h3 class="font-heading font-semibold text-xs tracking-wider uppercase text-slate-700">Audit Régime & Barrages</h3>
+        </div>
+        
+        <div class="flex items-center space-x-2">
+            <template x-if="currentAudit">
+                <span 
+                    class="px-2 py-0.5 rounded-full border text-[10px] font-bold uppercase tracking-wider flex items-center shadow-xs"
+                    :class="{
+                        'bg-emerald-50 border-emerald-200 text-emerald-700': currentAudit.regime_status === 'natural',
+                        'bg-amber-50 border-amber-200 text-amber-700': currentAudit.regime_status === 'warning',
+                        'bg-rose-50 border-rose-200 text-rose-700': currentAudit.regime_status === 'regulated'
+                    }"
+                >
+                    <span 
+                        class="w-1.5 h-1.5 rounded-full mr-1.5" 
+                        :class="{
+                            'bg-emerald-500': currentAudit.regime_status === 'natural',
+                            'bg-amber-500': currentAudit.regime_status === 'warning',
+                            'bg-rose-500': currentAudit.regime_status === 'regulated'
+                        }"
+                    ></span>
+                    <span x-text="currentAudit.regime"></span>
+                </span>
+            </template>
+            <button type="button" class="w-5 h-5 flex items-center justify-center text-slate-400 hover:text-slate-600 transition">
+                <i class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200" :class="open ? 'rotate-0' : '-rotate-90'"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Contenu Accordéon Pliable -->
+    <div x-show="open" x-collapse class="mt-2.5">
+        
+        <!-- Affichage quand les résultats d'audit sont présents -->
+        <template x-if="currentAudit">
+            <div class="space-y-2 text-xs">
+                
+                <!-- Bannière de Statut & Verdict -->
+                <div 
+                    class="p-2.5 rounded-xl border leading-relaxed text-[11px]"
+                    :class="{
+                        'bg-emerald-50/70 border-emerald-200 text-emerald-900': currentAudit.regime_status === 'natural',
+                        'bg-amber-50/70 border-amber-200 text-amber-900': currentAudit.regime_status === 'warning',
+                        'bg-rose-50/70 border-rose-200 text-rose-900': currentAudit.regime_status === 'regulated'
+                    }"
+                >
+                    <div class="font-bold flex items-center mb-1 text-[11px]">
+                        <i class="fa-solid mr-1.5" :class="currentAudit.badge_icon"></i>
+                        <span x-text="currentAudit.title"></span>
+                    </div>
+                    <p class="text-[10px] opacity-90" x-text="currentAudit.message"></p>
+                </div>
+
+                <!-- Échelle du cours d'eau & Grand Oued -->
+                <div class="bg-[#faf8f5] p-2 rounded-xl border border-[#e8e5df] flex items-center justify-between text-[11px]">
+                    <div class="flex items-center space-x-1.5">
+                        <i class="fa-solid fa-water text-teal-700 text-xs"></i>
+                        <span class="text-slate-600 font-medium">Échelle Fluviale :</span>
+                    </div>
+                    <span class="font-semibold text-slate-800 text-[10px]" x-text="currentAudit.scale.type"></span>
+                </div>
+
+                <!-- Section Barrages en Amont (si présents) -->
+                <template x-if="currentAudit.upstream_dams_count > 0">
+                    <div class="space-y-1.5 pt-1 border-t border-[#e8e5df]">
+                        <div class="flex items-center justify-between text-[10px] font-bold text-slate-600 uppercase tracking-wider">
+                            <span>Barrages Amont Détectés (<span x-text="currentAudit.upstream_dams_count"></span>)</span>
+                            <span class="font-mono text-rose-700" x-text="'Stockage : ' + currentAudit.total_storage_capacity_hm3 + ' hm³'"></span>
+                        </div>
+
+                        <!-- Liste déroulante des barrages amont -->
+                        <div class="space-y-1 max-h-32 overflow-y-auto custom-scrollbar pr-0.5">
+                            <template x-for="d in currentAudit.upstream_dams" :key="d.name">
+                                <div class="p-1.5 bg-[#faf8f5] border border-[#e8e5df] rounded-lg text-[10px] flex items-center justify-between">
+                                    <div>
+                                        <span class="font-semibold text-slate-800" x-text="'Barrage ' + d.name"></span>
+                                        <div class="text-[9px] text-slate-500 font-mono" x-text="'Oued ' + d.river + ' • à ~' + d.distance_upstream_km + ' km'"></div>
+                                    </div>
+                                    <span class="px-1.5 py-0.5 rounded bg-white border border-[#e8e5df] font-mono text-[9px] font-bold text-slate-700" x-text="d.capacity_hm3 + ' Mm³'"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Recommandation Scientifique pour l'Utilisateur -->
+                <div class="p-2 rounded-xl bg-slate-50 border border-slate-200 text-[10px] text-slate-600 leading-normal">
+                    <span class="font-bold text-slate-700 flex items-center mb-0.5">
+                        <i class="fa-solid fa-lightbulb text-amber-500 mr-1 text-xs"></i> Note Hydrologique :
+                    </span>
+                    <span x-text="currentAudit.recommendation"></span>
+                </div>
+
+            </div>
+        </template>
+
+        <!-- Placeholder avant sélection -->
+        <template x-if="!currentAudit">
+            <div class="text-center py-4 text-slate-400 text-xs">
+                <i class="fa-solid fa-shield-halved text-lg mb-1.5 opacity-40"></i>
+                <p class="text-[10px]">Délinéez un bassin pour auditer la présence de barrages et qualifier le régime d'écoulement.</p>
+            </div>
+        </template>
+
+    </div>
+</div>

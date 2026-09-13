@@ -1,0 +1,66 @@
+batch_size: 256
+clip_gradient_norm: 1
+commit_hash:
+data_dir: /content/drive/MyDrive/pfe_rainfall/nh_pooled
+dataset: generic
+device: cuda:0
+dynamic_inputs:
+- prcp_mm
+- tmin_c
+- tmax_c
+- pet_mm
+epochs: 25
+experiment_name: pool269_temporal
+head: regression
+hidden_size: 128
+img_log_dir: 
+  /content/drive/MyDrive/pfe_rainfall/runs_pooled/pool269_temporal_0407_111903/img_log
+initial_forget_bias: 3
+learning_rate:
+  0: 0.001
+  12: 0.0005
+  20: 0.0001
+loss: NSE
+metrics:
+- NSE
+- KGE
+model: cudalstm
+num_workers: 2
+number_of_basins: 247
+optimizer: Adam
+output_activation: linear
+output_dropout: 0.5
+package_version: 1.13.0
+predict_last_n: 1
+run_dir: 
+  /content/drive/MyDrive/pfe_rainfall/runs_pooled/pool269_temporal_0407_111903
+save_validation_results: false
+seed: 42
+seq_length: 365
+static_attributes:
+- area_km2
+- elev_mean
+- slope_mean
+- forest_frac
+- aridity
+- p_mean
+- frac_snow
+- p_seasonality
+target_variables:
+- qobs_mm
+test_basin_file: 
+  /content/drive/MyDrive/pfe_rainfall/nh_pooled/pool269_temporal_te.txt
+test_end_date: 30/09/2021
+test_start_date: 01/10/2009
+train_basin_file: 
+  /content/drive/MyDrive/pfe_rainfall/nh_pooled/pool269_temporal_tr.txt
+train_dir: 
+  /content/drive/MyDrive/pfe_rainfall/runs_pooled/pool269_temporal_0407_111903/train_data
+train_end_date: 30/09/2004
+train_start_date: 01/10/1961
+validate_every: 25
+validate_n_random_basins: 0
+validation_basin_file: 
+  /content/drive/MyDrive/pfe_rainfall/nh_pooled/pool269_temporal_tr.txt
+validation_end_date: 30/09/2009
+validation_start_date: 01/10/2004

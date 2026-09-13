@@ -1,0 +1,68 @@
+attribute_means:
+  area_km2: 713.9502024291497
+  aridity: 1.5247813765182185
+  elev_mean: 977.0775182186235
+  forest_frac: 0.45296356275303645
+  frac_snow: 0.03879352226720648
+  p_mean: 1.9454453441295545
+  p_seasonality: 1.0408542510121457
+  slope_mean: 8.056259109311739
+attribute_stds:
+  area_km2: 744.4472633276148
+  aridity: 0.5129473347914408
+  elev_mean: 361.1614055799969
+  forest_frac: 0.23685622780638438
+  frac_snow: 0.045837308163296654
+  p_mean: 0.5546501901042731
+  p_seasonality: 0.29965917464229685
+  slope_mean: 4.341724143971557
+xarray_feature_scale:
+  coords: {}
+  attrs: {}
+  dims: {}
+  data_vars:
+    pet_mm:
+      dims: []
+      attrs: {}
+      data: 1.6993001699447632
+    prcp_mm:
+      dims: []
+      attrs: {}
+      data: 4.404725074768066
+    qobs_mm:
+      dims: []
+      attrs: {}
+      data: 1.8443305492401123
+    tmax_c:
+      dims: []
+      attrs: {}
+      data: 8.383496284484863
+    tmin_c:
+      dims: []
+      attrs: {}
+      data: 6.574984073638916
+xarray_feature_center:
+  coords: {}
+  attrs: {}
+  dims: {}
+  data_vars:
+    pet_mm:
+      dims: []
+      attrs: {}
+      data: 2.6905198097229004
+    prcp_mm:
+      dims: []
+      attrs: {}
+      data: 1.9479471445083618
+    qobs_mm:
+      dims: []
+      attrs: {}
+      data: 0.7070284485816956
+    tmax_c:
+      dims: []
+      attrs: {}
+      data: 16.608675003051758
+    tmin_c:
+      dims: []
+      attrs: {}
+      data: 6.697290420532227

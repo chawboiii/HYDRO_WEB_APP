@@ -1,0 +1,25 @@
+{
+  "name": "HYDRO_WEB_APP (Django + PyTorch + GeoDjango)",
+  "image": "mcr.microsoft.com/devcontainers/python:1-3.12-bullseye",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {}
+  },
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y gdal-bin libgdal-dev libgeos-dev libproj-dev && pip install --upgrade pip && pip install torch --index-url https://download.pytorch.org/whl/cpu && pip install -r requirements.txt && python manage.py migrate",
+  "forwardPorts": [8000],
+  "portsAttributes": {
+    "8000": {
+      "label": "HYDRO_WEB_APP Web Interface",
+      "onAutoForward": "openPreview",
+      "visibility": "public"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "batisteo.vscode-django"
+      ]
+    }
+  }
+}

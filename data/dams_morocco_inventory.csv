@@ -1,0 +1,46 @@
+name,river,basin,lat,lon,capacity_hm3,height_m,year,purpose
+Al Wahda,Ouergha,Sebou,34.5833,-5.2917,3522.0,88,1997,"Irrigation, Électricité, Eau Potable, Protection Inondations"
+Idriss Ier,Inaouene,Sebou,34.1633,-4.68,1129.0,72,1973,"Irrigation, Électricité, Eau Potable"
+Sidi Chahed,Mikkes,Sebou,34.12,-5.27,170.0,50,1997,"Eau Potable, Protection Inondations"
+Allal El Fassi,Sebou,Sebou,33.9167,-4.65,81.0,65,1990,"Hydroélectricité, Transfert d'eau"
+Sahla,Sahla,Sebou,34.55,-4.58,62.0,53,1994,"Irrigation, Eau Potable"
+Bouhouda,Bouhouda,Sebou,34.58,-4.56,55.0,48,1999,"Irrigation, Eau Potable"
+Bab Louta,Bousbaa,Sebou,34.02,-4.35,36.0,42,1999,Eau Potable
+Asfalou (Taounate),Asfalou,Sebou,34.42,-4.25,45.0,46,2000,"Irrigation, Eau Potable"
+Al Massira,Oum Er-Rbia,Oum Er Rbia,32.4833,-7.5,2657.0,82,1979,"Irrigation, Électricité, Eau Potable Casablanca/Marrakech"
+Bin el Ouidane,El Abid,Oum Er Rbia,32.1133,-6.454,1215.0,133,1953,"Hydroélectricité, Irrigation Tadla"
+Ahmed El Hansali,Oum Er-Rbia,Oum Er Rbia,32.8667,-6.0333,668.0,101,2001,"Hydroélectricité, Irrigation, Régulation"
+Hassan Ier,Lakhdar,Oum Er Rbia,31.85,-7.07,236.0,145,1986,"Irrigation Haouz, Hydroélectricité"
+Moulay Youssef,Tessaout,Oum Er Rbia,31.62,-7.28,175.0,100,1970,Irrigation Tessaout Amont
+Timinoutine,Tessaout,Oum Er Rbia,31.75,-7.21,40.0,35,1995,"Régulation, Irrigation"
+Ait Messaoud,Oum Er-Rbia,Oum Er Rbia,32.89,-6.08,13.2,34,2004,Compensation hydroélectrique
+Oued El Makhazine,Loukkos,Loukkos,35.15,-5.98,673.0,67,1979,"Irrigation Loukkos, Eau Potable Tanger/Tétouan"
+Dar Khrofa,Soueir,Loukkos,35.32,-5.73,480.0,72,2018,"Irrigation Rmel, Eau Potable"
+9 Avril 1947,Hachef,Loukkos-Tanger,35.53,-5.92,300.0,52,1995,Eau Potable Grand Tanger
+Kharroub,Kharroub,Loukkos-Tanger,35.52,-5.68,185.0,60,2021,Eau Potable Tanger
+Smir,Smir,Méditerranée Occidentale,35.68,-5.35,39.0,45,1991,Eau Potable Tétouan / M'diq
+Moulay El Hassan Ben El Mahdi,Martil,Méditerranée Occidentale,35.51,-5.45,23.4,42,2017,"Protection Inondations, Eau Potable"
+Tanger Méditerranée,Rmel,Méditerranée Occidentale,35.85,-5.48,22.0,38,2008,Alimentation Complexe Tanger Med
+Ali Ou Mhamed,Laou,Méditerranée Occidentale,35.22,-5.28,60.0,55,2020,"Hydroélectricité, Eau Potable Chefchaouen"
+Mohammed V,Moulouya,Moulouya,34.65,-2.96,410.0,64,1967,"Irrigation Moulouya Aval, Électricité"
+Hassan II (Midir),Za,Moulouya,32.81,-4.83,392.0,78,2006,"Irrigation, Eau Potable Midelt"
+Oued Za,Za,Moulouya,34.35,-2.98,226.0,58,1995,"Irrigation, Protection Envasement"
+Tamalout,Ansegmir,Moulouya,32.58,-4.95,46.0,50,2014,Irrigation Haute Moulouya
+Mechraa Homadi,Moulouya,Moulouya,34.72,-2.8,12.0,52,1955,Dérivation d'irrigation Triffa/Garet
+Sidi Mohamed Ben Abdellah,Bou Regreg,Bouregreg,33.94,-6.66,975.0,98,1974,Eau Potable Rabat/Casablanca
+Tamesna,Bouregreg,Bouregreg,33.45,-6.42,57.0,48,2007,"Irrigation, Eau Potable"
+Hachef / Mellah,Mellah,Chaouia,33.55,-7.28,35.0,40,1980,Protection Inondations Mohammedia
+Youssef Ben Tachfine,Massa,Souss-Massa,29.85,-9.5,298.0,85,1972,"Irrigation Chtouka, Eau Potable Tiznit"
+Abdelmoumen,Issene,Souss-Massa,30.68,-9.21,198.0,94,1981,"Irrigation Issen, Eau Potable Agadir"
+Aoulouz,Souss,Souss-Massa,30.7,-8.17,103.0,78,1991,"Recharge nappe du Souss, Régulation crues"
+Moulay Abdellah,Tamri,Souss-Massa,30.72,-9.75,90.0,65,2003,Eau Potable Grand Agadir
+Mokhtar Soussi,Aouzmer,Souss-Massa,30.81,-8.02,39.8,62,2001,"Recharge nappe amont, Irrigation"
+Yaacoub El Mansour,Vir,Tensift,31.18,-8.02,70.0,70,2008,"Eau Potable Marrakech, Protection Inondations"
+Lalla Takerkoust,N'Fis,Tensift,31.36,-8.14,53.0,61,1935,"Irrigation N'Fis, Hydroélectricité"
+Sidi M'Hamed Ben Slimane Jazouli,Zat,Tensift,31.42,-7.65,15.0,45,2002,"Irrigation, Recharge nappe"
+Mansour Eddahbi,Draa,Draa,30.94,-6.78,438.0,70,1972,"Irrigation Vallées du Drâa, Eau Potable Ouarzazate"
+Tiouine,Imini,Draa,31.05,-7.15,270.0,84,2013,Eau Potable Ouarzazate / Zagora
+Agdez,Draa,Draa,30.71,-6.42,247.0,65,2021,"Irrigation Moyen Drâa, Protection Crues"
+Hassan Addakhil,Ziz,Ziz-Rheris,32.0,-4.48,312.0,85,1971,"Irrigation Palmeraies Tafilalet, Crues"
+Kaddoussa,Kaddoussa,Guir,32.12,-3.25,224.0,63,2021,"Irrigation Oasis Guir, Eau Potable"
+Todgha,Todgha,Ziz-Rheris,31.55,-5.58,33.0,55,2022,"Irrigation Oasis Tinghir, Crues"

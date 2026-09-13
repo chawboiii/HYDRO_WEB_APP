@@ -1,0 +1,48 @@
+# ==============================================================================
+# .gitignore — HYDRO_WEB_APP
+# ==============================================================================
+
+# Bytecode & Caches Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Caches de Simulation & Forçages Temporaires
+cache/forcings/*
+!cache/forcings/.gitkeep
+!cache/.gitkeep
+
+# Archives & Fichiers Temporaires Lourds
+*.zip
+*.tar.gz
+*.rar
+*.7z
+*.tmp
+temp_*/
+
+# Environnements Virtuels
+.venv/
+venv/
+ENV/
+env/
+
+# IDE & Editeurs
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+*.swp
+*~
+
+# Fichiers de Logs
+*.log
+
+# Variables d'Environnement Secretes
+.env
+.env.local
+
+# OS Fichiers Caches
+.DS_Store
+Thumbs.db

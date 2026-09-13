@@ -1,0 +1,60 @@
+batch_size: 256
+clip_gradient_norm: 1
+commit_hash:
+data_dir: /content/drive/MyDrive/pfe_rainfall/bridge/nh_bridge
+dataset: generic
+device: cuda:0
+dynamic_inputs:
+- prcp_mm
+- tmin_c
+- tmax_c
+- pet_mm
+epochs: 20
+experiment_name: deploy_s1042
+head: regression
+hidden_size: 128
+img_log_dir: /content/work/runs/deploy_s1042_1607_163117/img_log
+initial_forget_bias: 3
+learning_rate:
+  0: 0.001
+  10: 0.0005
+  16: 0.0001
+loss: NSE
+metrics:
+- NSE
+- KGE
+model: cudalstm
+num_workers: 2
+number_of_basins: 247
+optimizer: Adam
+output_activation: linear
+output_dropout: 0.5
+package_version: 1.13.0
+predict_last_n: 1
+run_dir: /content/work/runs/deploy_s1042_1607_163117
+save_validation_results: false
+seed: 1042
+seq_length: 365
+static_attributes:
+- area_km2
+- elev_mean
+- slope_mean
+- forest_frac
+- aridity
+- p_mean
+- frac_snow
+- p_seasonality
+target_variables:
+- qobs_mm
+test_basin_file: /content/work/cfg/te.txt
+test_end_date: 30/09/2021
+test_start_date: 01/10/1961
+train_basin_file: /content/work/cfg/tr.txt
+train_dir: /content/work/runs/deploy_s1042_1607_163117/train_data
+train_end_date: 30/09/2008
+train_start_date: 01/10/1961
+validate_every: 20
+validate_n_random_basins: 0
+validation_basin_file: /content/work/cfg/tr.txt
+validation_end_date: 30/09/2008
+validation_start_date: 01/10/1990

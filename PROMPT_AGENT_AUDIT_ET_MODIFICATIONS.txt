@@ -1,0 +1,401 @@
+================================================================================
+PROMPT COMPLET POUR L'AGENT IDE — HYDRO_WEB_APP (PFE IAV HASSAN II)
+REFECTION : MODELE TEMPOREL, 9 STATIONS, RESEAU DES OUEDS, AUDIT & BARRAGES
+================================================================================
+
+Tu es un ingenieur senior specialise en Django 5, GeoDjango, Leaflet.js, Chart.js et Deep Learning hydrologique (PyTorch).
+Nous devons finaliser la mise a niveau complete de l'application "HYDRO_WEB_APP" avec toutes les fonctionnalites et correctifs valides pour le PFE.
+
+Tous les fichiers de donnees, poids et couches SIG ont deja ete prepares et sont presents dans "data/" et "data_update_9stations/" :
+- models/temporal_model/ : Modele temporel Epoque 25 (247 bassins, KGE median = 0.619) avec model_epoch025.pt, train_data_scaler.yml, config.yml.
+- data/catchments_new_stations.gpkg : Polygones delinees et points des 9 stations marocaines (ABHL & ABHOER).
+- data/attributes_stations_maroc.csv : Matrice complete des 8 attributs physiques certifies + metriques.
+- data/observed_monthly_9_stations.csv : Chroniques mensuelles observees in situ (2000-2022/2024, q_obs_m3s et vol_obs_hm3).
+- data/forcings_9_stations_era5.parquet : Series journalieres ERA5-Land pour simulation instantanee sans latence.
+- data/morocco_rivers_network.gpkg & data/morocco_rivers_light.geojson : Reseau hydrographique filtre HydroRIVERS (Option A, >= 30 km2).
+- data/dams_morocco_inventory.json (.csv & .geojson) : Inventaire complet des 45 grands barrages du Maroc avec coordonnees, rivieres, bassins et capacites de retenue (Mm3).
+- gis_engine/anthropogenic_audit.py : Moteur d'audit spatial d'influence anthropique et de detection des barrages en amont.
+- templates/components/audit_card.html : Composant visuel reactif de l'audit hydrologique (Alpine.js).
+
+--------------------------------------------------------------------------------
+TACHE 1 : Passerelle Deep Learning vers le Modele Temporel (temporal_model)
+--------------------------------------------------------------------------------
+
+1.1. hydro_model/lstm_net.py
+Dans la fonction load_trained_model(weights_path, device) :
+Definir le chemin par defaut sur model_epoch025.pt du dossier temporal_model :
+
+```python
+def load_trained_model(weights_path: str = None, device: str = "cpu") -> HydroLSTM:
+    if weights_path is None:
+        base_dir = Path(__file__).resolve().parent.parent
+        weights_path = base_dir / "models" / "temporal_model" / "model_epoch025.pt"
+        if not weights_path.exists():
+            weights_path = base_dir / "data_update_9stations" / "temporal_model_weights" / "model_epoch025.pt"
+
+    weights_path = Path(weights_path)
+    if not weights_path.exists():
+        raise FileNotFoundError(f"Fichier de poids du modele temporel introuvable : {weights_path}")
+
+    model = HydroLSTM(input_size=12, hidden_size=128, dropout=0.5)
+    ckpt = torch.load(str(weights_path), map_location=torch.device(device), weights_only=True)
+
+    adapted_dict = {}
+    for k, v in ckpt.items():
+        if k.startswith("head.net."):
+            adapted_key = k.replace("head.net.", "head.")
+            adapted_dict[adapted_key] = v
+        else:
+            adapted_dict[k] = v
+
+    model.load_state_dict(adapted_dict, strict=True)
+    model.to(device)
+    model.eval()
+    return model
+```
+
+1.2. hydro_model/scaler.py
+Dans HydroDataScaler.__init__() :
+Pointer par defaut vers le scaler du modele temporel :
+
+```python
+    def __init__(self, scaler_path: Union[str, Path] = None):
+        if scaler_path is None:
+            base_dir = Path(__file__).resolve().parent.parent
+            scaler_path = base_dir / "models" / "temporal_model" / "train_data_scaler.yml"
+            if not scaler_path.exists():
+                scaler_path = base_dir / "data_update_9stations" / "temporal_model_weights" / "train_data_scaler.yml"
+```
+
+--------------------------------------------------------------------------------
+TACHE 2 : Remplacement des 9 Barrages par les 9 Nouvelles Stations de Jaugeage
+--------------------------------------------------------------------------------
+
+2.1. core/views.py
+Remplacer la variable MOROCCO_DAMS par MOROCCO_STATIONS avec les 9 stations reelles du PFE :
+
+```python
+MOROCCO_STATIONS = [
+    {"code": "LOUK_01", "name": "Pont d'Oughane", "basin": "Loukkos", "river": "Oughane", "area_km2": 300.8, "lat": 34.9643, "lon": -5.5373, "kge": 0.638, "status": "valid"},
+    {"code": "LOUK_02", "name": "Pont M'Ghar", "basin": "Loukkos", "river": "M'ghar", "area_km2": 82.3, "lat": 34.9885, "lon": -5.5115, "kge": -3.35, "status": "danger"},
+    {"code": "LOUK_04", "name": "M'Douar", "basin": "Loukkos", "river": "Loukkos", "area_km2": 659.4, "lat": 34.9993, "lon": -5.5156, "kge": 0.833, "status": "valid"},
+    {"code": "LOUK_05", "name": "Boufarah", "basin": "Loukkos", "river": "Loukkos", "area_km2": 261.8, "lat": 35.0418, "lon": -5.4631, "kge": 0.752, "status": "valid"},
+    {"code": "OER_01", "name": "Addammaghene", "basin": "Oum Er Rbia", "river": "Lakhdar", "area_km2": 1039.8, "lat": 31.7100, "lon": -6.7390, "kge": -0.403, "status": "danger"},
+    {"code": "OER_02", "name": "Sgatt", "basin": "Oum Er Rbia", "river": "Bernat", "area_km2": 435.6, "lat": 31.8100, "lon": -6.6865, "kge": -0.238, "status": "danger"},
+    {"code": "OER_03", "name": "Zaouit Ahancal", "basin": "Oum Er Rbia", "river": "Ahancal", "area_km2": 182.2, "lat": 31.8317, "lon": -6.1040, "kge": -0.664, "status": "danger"},
+    {"code": "OER_04", "name": "Tillouguite", "basin": "Oum Er Rbia", "river": "Asif Melloul", "area_km2": 2501.4, "lat": 32.0184, "lon": -6.2182, "kge": -0.135, "status": "warning"},
+    {"code": "OER_05", "name": "Tizi n'Isly", "basin": "Oum Er Rbia", "river": "Ouirine", "area_km2": 271.0, "lat": 32.4109, "lon": -5.7273, "kge": -0.368, "status": "warning"},
+]
+
+def dashboard_view(request):
+    recent_sims = SimulationRun.objects.all()[:5]
+    context = {
+        "morocco_stations": MOROCCO_STATIONS,
+        "recent_sims": recent_sims,
+        "default_lat": 33.5,
+        "default_lon": -6.0,
+        "default_zoom": 7
+    }
+    return render(request, "dashboard.html", context)
+```
+
+2.2. gis_engine/gpkg_reader.py
+Dans GeoPackageManager :
+Ajouter self.stations_morocco_gpkg = self.data_dir / "catchments_new_stations.gpkg" dans __init__().
+Dans find_catchment_by_name_or_id(identifier), chercher en priorite dans self.stations_morocco_gpkg (table catchments par code ou name). Renvoyer type: "morocco_station".
+
+2.3. gis_engine/attributes_calculator.py
+Charger data/attributes_stations_maroc.csv.
+Dans get_reference_attributes(identifier), chercher en priorite par code ou nom dans les stations marocaines.
+
+--------------------------------------------------------------------------------
+TACHE 3 : Verite Terrain & Debits Observes In Situ (SEULEMENT pour les 9 stations)
+--------------------------------------------------------------------------------
+
+3.1. core/api_views.py
+Dans select_catchment_api_view(request) :
+Verifier si l'exutoire est l'une des 9 stations marocaines (code LOUK_xx / OER_xx ou type == "morocco_station").
+Si oui :
+- Charger observed_monthly_9_stations.csv pour la station et affecter obs_monthly["I_corr"] = obs_monthly["vol_obs_hm3"].
+- Charger les forcages journaliers directs depuis forcings_9_stations_era5.parquet (instantane sans latence).
+Si non (delineation manuelle au clic ou bassin espagnol) :
+- obs_monthly = None (pas de debit observe).
+
+3.2. hydro_model/inference.py
+Dans predict() :
+Si obs_monthly est fourni, fusionner sur month_str, calculer KGE, NSE, PBIAS, definir metrics["has_obs"] = True, et injecter df_monthly["obs_hm3"].
+Si obs_monthly est None, metrics["has_obs"] = False.
+
+--------------------------------------------------------------------------------
+TACHE 4 : Integration de l'Audit d'Influence Anthropique & Barrages en Amont
+--------------------------------------------------------------------------------
+
+4.1. core/api_views.py
+Importer l'auditeur :
+```python
+from gis_engine.anthropogenic_audit import AnthropogenicAuditor
+auditor = AnthropogenicAuditor.get_instance()
+```
+Dans delineate_api_view(request) et select_catchment_api_view(request) :
+Executer l'audit sur le polygone delinee :
+```python
+audit_res = auditor.audit(
+    catchment_geom=feature["geometry"], # ou catchment_info["geometry"]
+    outlet_lat=snap_lat,
+    outlet_lon=snap_lon,
+    area_km2=area_km2
+)
+```
+Ajouter "audit": audit_res dans la reponse JSON.
+
+4.2. templates/dashboard.html
+Dans le volet lateral gauche (apres envelope_card.html), inserer le composant d'audit :
+```html
+<div class="p-3 space-y-2.5 flex-1">
+    {% include "components/envelope_card.html" %}
+    {% include "components/audit_card.html" %}
+    {% include "components/attributes_table.html" %}
+</div>
+```
+
+4.3. static/js/app.js
+Dans hydroApp() :
+Ajouter currentAudit: null, upstreamDamMarkers: [].
+Dans applySimulationResults(data) :
+Enregistrer this.currentAudit = data.audit || null.
+Si data.audit && data.audit.upstream_dams existe et contient des barrages :
+Ajouter des marqueurs rouges sur la carte Leaflet avec icone fa-water-ladder pour chaque barrage amont situe a l'interieur du bassin versant delinee.
+Dans clearDelineation() :
+Supprimer les marqueurs de barrages amont et reinitialiser currentAudit.
+
+--------------------------------------------------------------------------------
+TACHE 5 : Integration du Reseau Hydrographique des Oueds (HydroRIVERS Option A)
+--------------------------------------------------------------------------------
+
+5.1. core/api_views.py & core/urls.py
+Ajouter l'endpoint GET /api/rivers/ :
+```python
+@cache_page(60 * 60)
+@require_GET
+def rivers_geojson_view(request):
+    """Fournit le reseau des oueds majeurs du Maroc (HydroRIVERS filtre >= 30 km2)"""
+    rivers_path = DATA_DIR / "morocco_rivers_light.geojson"
+    if not rivers_path.exists():
+        rivers_path = DATA_DIR / "morocco_rivers_main.geojson"
+    if not rivers_path.exists():
+        raise Http404("Fichier de reseau hydrographique introuvable.")
+    with open(rivers_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return JsonResponse(data, safe=False)
+```
+Dans core/urls.py :
+```python
+path('api/rivers/', api_views.rivers_geojson_view, name='api_rivers'),
+```
+
+5.2. templates/dashboard.html
+Ajouter la case a cocher dans le menu "Couches SIG" :
+```html
+<label class="flex items-center space-x-2 text-slate-700 hover:text-slate-900 cursor-pointer pt-1 border-t border-[#e8e5df]">
+    <input type="checkbox" x-model="layers.morocco_rivers" @change="toggleRiversLayer(layers.morocco_rivers)" class="rounded border-[#d8d3c8] text-sky-600 focus:ring-0">
+    <span class="font-medium text-sky-900 flex items-center">
+        <i class="fa-solid fa-water text-sky-600 mr-1.5"></i> Reseau des Oueds (HydroRIVERS)
+    </span>
+</label>
+```
+
+5.3. static/js/app.js
+Ajouter toggleRiversLayer(visible) pour charger et tracer les polylignes des cours d'eau en bleu (#0284c7, epaisseur 1.6).
+
+--------------------------------------------------------------------------------
+TACHE 6 : Affichage de la Couche SIG des Grands Barrages sur la Carte Leaflet
+--------------------------------------------------------------------------------
+
+6.1. core/api_views.py & core/urls.py
+Ajouter l'endpoint GET /api/dams/ :
+```python
+@cache_page(60 * 60)
+@require_GET
+def dams_geojson_view(request):
+    """Fournit les 45 grands barrages du Maroc avec coordonnees, capacites et caracteristiques"""
+    dams_path = DATA_DIR / "dams_morocco_inventory.geojson"
+    if not dams_path.exists():
+        dams_path = Path(__file__).resolve().parent.parent / "data_update_9stations" / "dams_morocco_inventory.geojson"
+    if not dams_path.exists():
+        raise Http404("Fichier d'inventaire des barrages introuvable.")
+    with open(dams_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return JsonResponse(data, safe=False)
+```
+Dans core/urls.py :
+```python
+path('api/dams/', api_views.dams_geojson_view, name='api_dams'),
+```
+
+6.2. templates/dashboard.html
+Dans le menu deroulant des "Couches SIG" (ligne ~320), ajouter la case a cocher pour les 45 barrages :
+```html
+<label class="flex items-center space-x-2 text-slate-700 hover:text-slate-900 cursor-pointer pt-1 border-t border-[#e8e5df]">
+    <input type="checkbox" x-model="layers.morocco_dams_all" @change="toggleAllDamsLayer(layers.morocco_dams_all)" class="rounded border-[#d8d3c8] text-indigo-600 focus:ring-0">
+    <span class="font-medium text-indigo-950 flex items-center">
+        <i class="fa-solid fa-landmark-dome text-indigo-600 mr-1.5"></i> Grands Barrages du Maroc (45)
+    </span>
+</label>
+```
+
+6.3. static/js/app.js
+- Dans hydroApp(), ajouter aux variables d'etat :
+  `layers: { ..., morocco_dams_all: false }`
+  `allDamsLayer: null`
+- Implementer la methode toggleAllDamsLayer(visible) :
+```javascript
+toggleAllDamsLayer(visible) {
+    if (!visible) {
+        if (this.allDamsLayer && this.map.hasLayer(this.allDamsLayer)) {
+            this.map.removeLayer(this.allDamsLayer);
+        }
+        return;
+    }
+
+    if (this.allDamsLayer) {
+        this.allDamsLayer.addTo(this.map);
+        return;
+    }
+
+    fetch('/api/dams/')
+        .then(res => res.json())
+        .then(data => {
+            this.allDamsLayer = L.geoJSON(data, {
+                pointToLayer: (feature, latlng) => {
+                    const props = feature.properties || {};
+                    // Marqueur personnalise avec icone barrage indigo
+                    const damIcon = L.divIcon({
+                        className: 'custom-dam-marker',
+                        html: `<div class="w-7 h-7 bg-indigo-700 hover:bg-indigo-800 text-white rounded-full flex items-center justify-center shadow-md border-2 border-white transition-transform hover:scale-125 cursor-pointer">
+                                   <i class="fa-solid fa-landmark-dome text-[11px]"></i>
+                               </div>`,
+                        iconSize: [28, 28],
+                        iconAnchor: [14, 14],
+                        popupAnchor: [0, -14]
+                    });
+                    return L.marker(latlng, { icon: damIcon });
+                },
+                onEachFeature: (feature, layer) => {
+                    const p = feature.properties || {};
+                    const popupHtml = `
+                        <div class="p-2.5 font-sans min-w-[240px]">
+                            <div class="flex items-center space-x-2 border-b border-indigo-100 pb-1.5 mb-2">
+                                <span class="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs">
+                                    <i class="fa-solid fa-landmark-dome"></i>
+                                </span>
+                                <div>
+                                    <h4 class="font-bold text-xs text-slate-900 leading-tight">${p.name || 'Barrage'}</h4>
+                                    <span class="text-[10px] text-slate-500">${p.basin || ''} — Oued ${p.river || ''}</span>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-1.5 text-[11px] mb-2">
+                                <div class="bg-indigo-50/70 p-1.5 rounded-lg border border-indigo-100">
+                                    <span class="text-[9.5px] text-indigo-700 font-semibold block">Capacite Retenue</span>
+                                    <span class="font-bold text-indigo-950">${p.capacity_hm3 || p.cap_hm3 || '--'} Mm3</span>
+                                </div>
+                                <div class="bg-slate-50 p-1.5 rounded-lg border border-slate-200">
+                                    <span class="text-[9.5px] text-slate-500 font-semibold block">Hauteur Digue</span>
+                                    <span class="font-bold text-slate-800">${p.height_m ? p.height_m + ' m' : '--'}</span>
+                                </div>
+                            </div>
+                            <div class="text-[10px] text-slate-600 space-y-0.5 border-t border-slate-100 pt-1.5">
+                                <div><strong class="text-slate-700">Mise en service :</strong> ${p.year || '--'}</div>
+                                <div><strong class="text-slate-700">Usage :</strong> ${p.purpose || 'Irrigation, AEP'}</div>
+                            </div>
+                        </div>
+                    `;
+                    layer.bindPopup(popupHtml, { maxWidth: 300, className: 'modern-dam-popup' });
+                    layer.bindTooltip(p.name + ` (${p.capacity_hm3 || p.cap_hm3 || ''} Mm3)`, {
+                        direction: 'top',
+                        offset: [0, -12],
+                        opacity: 0.95
+                    });
+                }
+            });
+            this.allDamsLayer.addTo(this.map);
+        })
+        .catch(err => console.error("Erreur de chargement des barrages:", err));
+}
+```
+
+--------------------------------------------------------------------------------
+TACHE 7 : Correctifs UI — Position Controle des Cartes & Affichage Hydrogrammes
+--------------------------------------------------------------------------------
+
+7.1. Positionner le Selecteur des 3 Fonds de Carte en HAUT A GAUCHE (topleft) :
+IMPORTANT : L'onglet des 3 fonds de carte Leaflet (Topographie Relief, Carte Detaillee Voyager, Satellite HD) etait place a 'bottomleft', ou il etait cache et bloque par l'indicateur HUD des coordonnees du curseur (situe a bottom-3 left-14).
+De plus, en haut a droite ('topright'), il chevauchait la barre d'outils HTML "Couches SIG".
+CORRECTION : Le positionner imperativement en HAUT A GAUCHE ('topleft') :
+Dans static/js/app.js (dans la methode initMap()) :
+```javascript
+// Positionne en HAUT A GAUCHE pour une visibilite totale et sans conflit avec le curseur ni la barre SIG
+L.control.layers(baseMaps, null, { position: 'topleft' }).addTo(this.map);
+```
+Dans static/css/custom.css (ou dans le style de dashboard.html) :
+Ajuster le decalage superieur de .leaflet-top.leaflet-left pour garantir qu'il s'aligne proprement :
+```css
+.leaflet-top.leaflet-left {
+    margin-top: 12px;
+    margin-left: 12px;
+}
+.leaflet-top.leaflet-left .leaflet-control-layers {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border: 1px solid #e8e5df;
+}
+```
+
+7.2. Remplacer OpenStreetMap bloque (403) & Eliminer les Lenteurs de Carte :
+Remplacer le serveur standard tile.openstreetmap.org (qui bloque les requetes directes HTTP 403) par CartoDB Voyager :
+```javascript
+const cartoVoyager = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    maxZoom: 19,
+    subdomains: 'abcd',
+    updateWhenIdle: true,
+    keepBuffer: 2,
+    attribution: '&copy; OpenStreetMap &copy; CARTO'
+});
+```
+Ajouter updateWhenIdle: true et keepBuffer: 2 sur TOUS les tileLayers (Esri Topo, Carto Voyager, Esri Sat). Cela supprime instantanement la latence lors du changement de source de carte ou du deplacement.
+
+7.3. Corriger l'Affichage des Hydrogrammes Chart.js :
+- Dans hydroApp(), fixer chartMode: 'monthly' par defaut (276 mois au lieu de 8 378 jours journaliers = affichage immediat en 5 ms des barres simulees + courbe observee in situ sans saturer le canvas).
+- Dans applySimulationResults(data), inserer un delai de 120 ms avant updateChart() pour eviter la condition de course de rendu 0px pendant l'animation du tiroir Alpine.js :
+```javascript
+if (this.chartDrawerState === 'minimized') {
+    this.chartDrawerState = 'standard';
+}
+setTimeout(() => {
+    this.updateChart();
+}, 120);
+```
+- Dans templates/components/hydrograph_chart.html :
+Corriger les noms de proprietes des 8 attributs physiques dans le volet lateral pour correspondre exactement aux donnees de sortie du backend :
+elev_mean (au lieu de mean_elev), slope_mean (au lieu de mean_slope), frac_snow (au lieu de snow_frac), p_seasonality (au lieu de seasonality).
+
+--------------------------------------------------------------------------------
+VERIFICATION ET VALIDATION FINALE :
+--------------------------------------------------------------------------------
+1. Lancer le serveur : python manage.py runserver.
+2. Verifier la carte Leaflet :
+   - L'onglet selecteur des 3 fonds de carte est visible en haut a gauche, parfaitement cliquable, sans chevauchement avec les coordonnees du curseur au bas.
+   - Les tuiles Voyager et Satellite changent instantanement et sans erreur 403.
+3. Cocher "Grands Barrages du Maroc (45)" :
+   - 45 marqueurs indigo apparaissent avec l'icone de barrage.
+   - Le clic sur un barrage (ex: Al Wahda, Bin el Ouidane, Al Massira, Mansour Eddahbi) ouvre une fiche popup detaillee (nom, oued, capacite en Mm3, hauteur, annee).
+4. Cocher "Reseau des Oueds (HydroRIVERS)" :
+   - Le reseau filaire des cours d'eau majeurs du Maroc s'affiche fluidement en bleu.
+5. Selectionner la station LOUK_05 (Boufarah) :
+   - Delineation instantanee du bassin versant.
+   - L'hydrogramme mensuel s'ouvre avec les barres simulees bleues et la courbe orange des debits observes in situ (has_obs = true).
+   - L'audit affiche : Regime Naturel (aucun barrage amont).
+6. Cliquer sur un point en aval d'un grand barrage (ex: Ouergha en aval d'Al Wahda ou Oum Er-Rbia en aval de Bin el Ouidane) :
+   - L'audit affiche : Regime Regule par Barrage Amont.
+   - La capacite de retenue totale en amont est calculee (ex: > 3 500 Mm3).
+   - Les barrages situes en amont dans le bassin delinee sont automatiquement marques et mis en evidence.
+================================================================================

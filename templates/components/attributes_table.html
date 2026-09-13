@@ -1,0 +1,77 @@
+<!-- Tableau des 8 Attributs Statiques Anti-Fuite (Modern Organic) -->
+<div x-data="{ open: true }" class="bg-white border border-[#e8e5df] rounded-2xl p-3 shadow-xs transition-all">
+    <div class="flex items-center justify-between cursor-pointer select-none" @click="open = !open">
+        <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-list-check text-teal-700 text-xs"></i>
+            <h3 class="font-heading font-semibold text-xs tracking-wider uppercase text-slate-700">8 Attributs Physiques</h3>
+        </div>
+        <div class="flex items-center space-x-2">
+            <span class="text-[9px] text-slate-500 bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded font-mono">Normalisés S42</span>
+            <button type="button" class="w-5 h-5 flex items-center justify-center text-slate-400 hover:text-slate-600 transition">
+                <i class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200" :class="open ? 'rotate-0' : '-rotate-90'"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Contenu Accordéon Pliable -->
+    <div x-show="open" x-collapse class="mt-2.5">
+
+    <template x-if="currentAttributes">
+        <div class="grid grid-cols-2 gap-2 text-xs">
+            <!-- 4 Attributs Topographiques & Sol -->
+            <div class="space-y-1.5 bg-[#faf8f5] p-2.5 rounded-xl border border-[#e8e5df]">
+                <div class="text-[10px] font-bold text-teal-800 uppercase tracking-wider mb-1 flex items-center">
+                    <i class="fa-solid fa-mountain mr-1"></i> Topo & Sol
+                </div>
+                
+                <div class="flex justify-between items-center py-1 border-b border-[#e8e5df]">
+                    <span class="text-slate-500 text-[11px]" title="Superficie du bassin versant amont">Superficie (<code class="text-slate-700">area</code>)</span>
+                    <span class="font-mono text-slate-800 font-bold" x-text="currentAttributes.area_km2 + ' km²'"></span>
+                </div>
+                <div class="flex justify-between items-center py-1 border-b border-[#e8e5df]">
+                    <span class="text-slate-500 text-[11px]" title="Altitude moyenne dérivée du MNT">Altitude (<code class="text-slate-700">elev</code>)</span>
+                    <span class="font-mono text-slate-800 font-bold" x-text="currentAttributes.elev_mean + ' m'"></span>
+                </div>
+                <div class="flex justify-between items-center py-1 border-b border-[#e8e5df]">
+                    <span class="text-slate-500 text-[11px]" title="Pente topographique moyenne">Pente (<code class="text-slate-700">slope</code>)</span>
+                    <span class="font-mono text-slate-800 font-bold" x-text="currentAttributes.slope_mean + '°'"></span>
+                </div>
+                <div class="flex justify-between items-center py-1">
+                    <span class="text-slate-500 text-[11px]" title="Fraction de couverture forestière">Forêt (<code class="text-slate-700">forest</code>)</span>
+                    <span class="font-mono text-slate-800 font-bold" x-text="Math.round(currentAttributes.forest_frac * 100) + ' %'"></span>
+                </div>
+            </div>
+
+            <!-- 4 Attributs Climatiques 10 Ans -->
+            <div class="space-y-1.5 bg-[#faf8f5] p-2.5 rounded-xl border border-[#e8e5df]">
+                <div class="text-[10px] font-bold text-sky-800 uppercase tracking-wider mb-1 flex items-center">
+                    <i class="fa-solid fa-cloud-sun-rain mr-1"></i> Climat 10 Ans
+                </div>
+
+                <div class="flex justify-between items-center py-1 border-b border-[#e8e5df]">
+                    <span class="text-slate-500 text-[11px]" title="Précipitation moyenne journalière">Précip. (<code class="text-slate-700">p_mean</code>)</span>
+                    <span class="font-mono text-slate-800 font-bold" x-text="currentAttributes.p_mean + ' mm/j'"></span>
+                </div>
+                <div class="flex justify-between items-center py-1 border-b border-[#e8e5df]">
+                    <span class="text-slate-500 text-[11px]" title="Rapport d'aridité moyenne = ETP / P">Aridité (<code class="text-slate-700">aridity</code>)</span>
+                    <span class="font-mono text-slate-800 font-bold" x-text="currentAttributes.aridity"></span>
+                </div>
+                <div class="flex justify-between items-center py-1 border-b border-[#e8e5df]">
+                    <span class="text-slate-500 text-[11px]" title="Fraction des précipitations tombant sous 0°C">Neige (<code class="text-slate-700">snow</code>)</span>
+                    <span class="font-mono text-slate-800 font-bold" x-text="(currentAttributes.frac_snow * 100).toFixed(1) + ' %'"></span>
+                </div>
+                <div class="flex justify-between items-center py-1">
+                    <span class="text-slate-500 text-[11px]" title="Variation saisonnière des précipitations">Saison. (<code class="text-slate-700">p_seas</code>)</span>
+                    <span class="font-mono text-slate-800 font-bold" x-text="currentAttributes.p_seasonality"></span>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template x-if="!currentAttributes">
+        <div class="text-center py-4 text-slate-400 text-xs bg-[#faf8f5] rounded-xl border border-dashed border-[#e8e5df]">
+            <p class="text-slate-500">Aucun attribut calculé pour le moment.</p>
+        </div>
+    </template>
+    </div>
+</div>

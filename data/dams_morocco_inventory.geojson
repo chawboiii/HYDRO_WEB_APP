@@ -1,0 +1,860 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.2917,
+          34.5833
+        ]
+      },
+      "properties": {
+        "name": "Al Wahda",
+        "river": "Ouergha",
+        "basin": "Sebou",
+        "capacity_hm3": 3522.0,
+        "height_m": 88,
+        "year": 1997,
+        "purpose": "Irrigation, Électricité, Eau Potable, Protection Inondations"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.68,
+          34.1633
+        ]
+      },
+      "properties": {
+        "name": "Idriss Ier",
+        "river": "Inaouene",
+        "basin": "Sebou",
+        "capacity_hm3": 1129.0,
+        "height_m": 72,
+        "year": 1973,
+        "purpose": "Irrigation, Électricité, Eau Potable"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.27,
+          34.12
+        ]
+      },
+      "properties": {
+        "name": "Sidi Chahed",
+        "river": "Mikkes",
+        "basin": "Sebou",
+        "capacity_hm3": 170.0,
+        "height_m": 50,
+        "year": 1997,
+        "purpose": "Eau Potable, Protection Inondations"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.65,
+          33.9167
+        ]
+      },
+      "properties": {
+        "name": "Allal El Fassi",
+        "river": "Sebou",
+        "basin": "Sebou",
+        "capacity_hm3": 81.0,
+        "height_m": 65,
+        "year": 1990,
+        "purpose": "Hydroélectricité, Transfert d'eau"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.58,
+          34.55
+        ]
+      },
+      "properties": {
+        "name": "Sahla",
+        "river": "Sahla",
+        "basin": "Sebou",
+        "capacity_hm3": 62.0,
+        "height_m": 53,
+        "year": 1994,
+        "purpose": "Irrigation, Eau Potable"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.56,
+          34.58
+        ]
+      },
+      "properties": {
+        "name": "Bouhouda",
+        "river": "Bouhouda",
+        "basin": "Sebou",
+        "capacity_hm3": 55.0,
+        "height_m": 48,
+        "year": 1999,
+        "purpose": "Irrigation, Eau Potable"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.35,
+          34.02
+        ]
+      },
+      "properties": {
+        "name": "Bab Louta",
+        "river": "Bousbaa",
+        "basin": "Sebou",
+        "capacity_hm3": 36.0,
+        "height_m": 42,
+        "year": 1999,
+        "purpose": "Eau Potable"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.25,
+          34.42
+        ]
+      },
+      "properties": {
+        "name": "Asfalou (Taounate)",
+        "river": "Asfalou",
+        "basin": "Sebou",
+        "capacity_hm3": 45.0,
+        "height_m": 46,
+        "year": 2000,
+        "purpose": "Irrigation, Eau Potable"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -7.5,
+          32.4833
+        ]
+      },
+      "properties": {
+        "name": "Al Massira",
+        "river": "Oum Er-Rbia",
+        "basin": "Oum Er Rbia",
+        "capacity_hm3": 2657.0,
+        "height_m": 82,
+        "year": 1979,
+        "purpose": "Irrigation, Électricité, Eau Potable Casablanca/Marrakech"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.454,
+          32.1133
+        ]
+      },
+      "properties": {
+        "name": "Bin el Ouidane",
+        "river": "El Abid",
+        "basin": "Oum Er Rbia",
+        "capacity_hm3": 1215.0,
+        "height_m": 133,
+        "year": 1953,
+        "purpose": "Hydroélectricité, Irrigation Tadla"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.0333,
+          32.8667
+        ]
+      },
+      "properties": {
+        "name": "Ahmed El Hansali",
+        "river": "Oum Er-Rbia",
+        "basin": "Oum Er Rbia",
+        "capacity_hm3": 668.0,
+        "height_m": 101,
+        "year": 2001,
+        "purpose": "Hydroélectricité, Irrigation, Régulation"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -7.07,
+          31.85
+        ]
+      },
+      "properties": {
+        "name": "Hassan Ier",
+        "river": "Lakhdar",
+        "basin": "Oum Er Rbia",
+        "capacity_hm3": 236.0,
+        "height_m": 145,
+        "year": 1986,
+        "purpose": "Irrigation Haouz, Hydroélectricité"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -7.28,
+          31.62
+        ]
+      },
+      "properties": {
+        "name": "Moulay Youssef",
+        "river": "Tessaout",
+        "basin": "Oum Er Rbia",
+        "capacity_hm3": 175.0,
+        "height_m": 100,
+        "year": 1970,
+        "purpose": "Irrigation Tessaout Amont"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -7.21,
+          31.75
+        ]
+      },
+      "properties": {
+        "name": "Timinoutine",
+        "river": "Tessaout",
+        "basin": "Oum Er Rbia",
+        "capacity_hm3": 40.0,
+        "height_m": 35,
+        "year": 1995,
+        "purpose": "Régulation, Irrigation"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.08,
+          32.89
+        ]
+      },
+      "properties": {
+        "name": "Ait Messaoud",
+        "river": "Oum Er-Rbia",
+        "basin": "Oum Er Rbia",
+        "capacity_hm3": 13.2,
+        "height_m": 34,
+        "year": 2004,
+        "purpose": "Compensation hydroélectrique"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.98,
+          35.15
+        ]
+      },
+      "properties": {
+        "name": "Oued El Makhazine",
+        "river": "Loukkos",
+        "basin": "Loukkos",
+        "capacity_hm3": 673.0,
+        "height_m": 67,
+        "year": 1979,
+        "purpose": "Irrigation Loukkos, Eau Potable Tanger/Tétouan"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.73,
+          35.32
+        ]
+      },
+      "properties": {
+        "name": "Dar Khrofa",
+        "river": "Soueir",
+        "basin": "Loukkos",
+        "capacity_hm3": 480.0,
+        "height_m": 72,
+        "year": 2018,
+        "purpose": "Irrigation Rmel, Eau Potable"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.92,
+          35.53
+        ]
+      },
+      "properties": {
+        "name": "9 Avril 1947",
+        "river": "Hachef",
+        "basin": "Loukkos-Tanger",
+        "capacity_hm3": 300.0,
+        "height_m": 52,
+        "year": 1995,
+        "purpose": "Eau Potable Grand Tanger"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.68,
+          35.52
+        ]
+      },
+      "properties": {
+        "name": "Kharroub",
+        "river": "Kharroub",
+        "basin": "Loukkos-Tanger",
+        "capacity_hm3": 185.0,
+        "height_m": 60,
+        "year": 2021,
+        "purpose": "Eau Potable Tanger"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.35,
+          35.68
+        ]
+      },
+      "properties": {
+        "name": "Smir",
+        "river": "Smir",
+        "basin": "Méditerranée Occidentale",
+        "capacity_hm3": 39.0,
+        "height_m": 45,
+        "year": 1991,
+        "purpose": "Eau Potable Tétouan / M'diq"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.45,
+          35.51
+        ]
+      },
+      "properties": {
+        "name": "Moulay El Hassan Ben El Mahdi",
+        "river": "Martil",
+        "basin": "Méditerranée Occidentale",
+        "capacity_hm3": 23.4,
+        "height_m": 42,
+        "year": 2017,
+        "purpose": "Protection Inondations, Eau Potable"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.48,
+          35.85
+        ]
+      },
+      "properties": {
+        "name": "Tanger Méditerranée",
+        "river": "Rmel",
+        "basin": "Méditerranée Occidentale",
+        "capacity_hm3": 22.0,
+        "height_m": 38,
+        "year": 2008,
+        "purpose": "Alimentation Complexe Tanger Med"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.28,
+          35.22
+        ]
+      },
+      "properties": {
+        "name": "Ali Ou Mhamed",
+        "river": "Laou",
+        "basin": "Méditerranée Occidentale",
+        "capacity_hm3": 60.0,
+        "height_m": 55,
+        "year": 2020,
+        "purpose": "Hydroélectricité, Eau Potable Chefchaouen"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.96,
+          34.65
+        ]
+      },
+      "properties": {
+        "name": "Mohammed V",
+        "river": "Moulouya",
+        "basin": "Moulouya",
+        "capacity_hm3": 410.0,
+        "height_m": 64,
+        "year": 1967,
+        "purpose": "Irrigation Moulouya Aval, Électricité"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.83,
+          32.81
+        ]
+      },
+      "properties": {
+        "name": "Hassan II (Midir)",
+        "river": "Za",
+        "basin": "Moulouya",
+        "capacity_hm3": 392.0,
+        "height_m": 78,
+        "year": 2006,
+        "purpose": "Irrigation, Eau Potable Midelt"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.98,
+          34.35
+        ]
+      },
+      "properties": {
+        "name": "Oued Za",
+        "river": "Za",
+        "basin": "Moulouya",
+        "capacity_hm3": 226.0,
+        "height_m": 58,
+        "year": 1995,
+        "purpose": "Irrigation, Protection Envasement"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.95,
+          32.58
+        ]
+      },
+      "properties": {
+        "name": "Tamalout",
+        "river": "Ansegmir",
+        "basin": "Moulouya",
+        "capacity_hm3": 46.0,
+        "height_m": 50,
+        "year": 2014,
+        "purpose": "Irrigation Haute Moulouya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.8,
+          34.72
+        ]
+      },
+      "properties": {
+        "name": "Mechraa Homadi",
+        "river": "Moulouya",
+        "basin": "Moulouya",
+        "capacity_hm3": 12.0,
+        "height_m": 52,
+        "year": 1955,
+        "purpose": "Dérivation d'irrigation Triffa/Garet"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.66,
+          33.94
+        ]
+      },
+      "properties": {
+        "name": "Sidi Mohamed Ben Abdellah",
+        "river": "Bou Regreg",
+        "basin": "Bouregreg",
+        "capacity_hm3": 975.0,
+        "height_m": 98,
+        "year": 1974,
+        "purpose": "Eau Potable Rabat/Casablanca"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.42,
+          33.45
+        ]
+      },
+      "properties": {
+        "name": "Tamesna",
+        "river": "Bouregreg",
+        "basin": "Bouregreg",
+        "capacity_hm3": 57.0,
+        "height_m": 48,
+        "year": 2007,
+        "purpose": "Irrigation, Eau Potable"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -7.28,
+          33.55
+        ]
+      },
+      "properties": {
+        "name": "Hachef / Mellah",
+        "river": "Mellah",
+        "basin": "Chaouia",
+        "capacity_hm3": 35.0,
+        "height_m": 40,
+        "year": 1980,
+        "purpose": "Protection Inondations Mohammedia"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -9.5,
+          29.85
+        ]
+      },
+      "properties": {
+        "name": "Youssef Ben Tachfine",
+        "river": "Massa",
+        "basin": "Souss-Massa",
+        "capacity_hm3": 298.0,
+        "height_m": 85,
+        "year": 1972,
+        "purpose": "Irrigation Chtouka, Eau Potable Tiznit"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -9.21,
+          30.68
+        ]
+      },
+      "properties": {
+        "name": "Abdelmoumen",
+        "river": "Issene",
+        "basin": "Souss-Massa",
+        "capacity_hm3": 198.0,
+        "height_m": 94,
+        "year": 1981,
+        "purpose": "Irrigation Issen, Eau Potable Agadir"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -8.17,
+          30.7
+        ]
+      },
+      "properties": {
+        "name": "Aoulouz",
+        "river": "Souss",
+        "basin": "Souss-Massa",
+        "capacity_hm3": 103.0,
+        "height_m": 78,
+        "year": 1991,
+        "purpose": "Recharge nappe du Souss, Régulation crues"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -9.75,
+          30.72
+        ]
+      },
+      "properties": {
+        "name": "Moulay Abdellah",
+        "river": "Tamri",
+        "basin": "Souss-Massa",
+        "capacity_hm3": 90.0,
+        "height_m": 65,
+        "year": 2003,
+        "purpose": "Eau Potable Grand Agadir"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -8.02,
+          30.81
+        ]
+      },
+      "properties": {
+        "name": "Mokhtar Soussi",
+        "river": "Aouzmer",
+        "basin": "Souss-Massa",
+        "capacity_hm3": 39.8,
+        "height_m": 62,
+        "year": 2001,
+        "purpose": "Recharge nappe amont, Irrigation"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -8.02,
+          31.18
+        ]
+      },
+      "properties": {
+        "name": "Yaacoub El Mansour",
+        "river": "Vir",
+        "basin": "Tensift",
+        "capacity_hm3": 70.0,
+        "height_m": 70,
+        "year": 2008,
+        "purpose": "Eau Potable Marrakech, Protection Inondations"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -8.14,
+          31.36
+        ]
+      },
+      "properties": {
+        "name": "Lalla Takerkoust",
+        "river": "N'Fis",
+        "basin": "Tensift",
+        "capacity_hm3": 53.0,
+        "height_m": 61,
+        "year": 1935,
+        "purpose": "Irrigation N'Fis, Hydroélectricité"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -7.65,
+          31.42
+        ]
+      },
+      "properties": {
+        "name": "Sidi M'Hamed Ben Slimane Jazouli",
+        "river": "Zat",
+        "basin": "Tensift",
+        "capacity_hm3": 15.0,
+        "height_m": 45,
+        "year": 2002,
+        "purpose": "Irrigation, Recharge nappe"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.78,
+          30.94
+        ]
+      },
+      "properties": {
+        "name": "Mansour Eddahbi",
+        "river": "Draa",
+        "basin": "Draa",
+        "capacity_hm3": 438.0,
+        "height_m": 70,
+        "year": 1972,
+        "purpose": "Irrigation Vallées du Drâa, Eau Potable Ouarzazate"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -7.15,
+          31.05
+        ]
+      },
+      "properties": {
+        "name": "Tiouine",
+        "river": "Imini",
+        "basin": "Draa",
+        "capacity_hm3": 270.0,
+        "height_m": 84,
+        "year": 2013,
+        "purpose": "Eau Potable Ouarzazate / Zagora"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.42,
+          30.71
+        ]
+      },
+      "properties": {
+        "name": "Agdez",
+        "river": "Draa",
+        "basin": "Draa",
+        "capacity_hm3": 247.0,
+        "height_m": 65,
+        "year": 2021,
+        "purpose": "Irrigation Moyen Drâa, Protection Crues"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.48,
+          32.0
+        ]
+      },
+      "properties": {
+        "name": "Hassan Addakhil",
+        "river": "Ziz",
+        "basin": "Ziz-Rheris",
+        "capacity_hm3": 312.0,
+        "height_m": 85,
+        "year": 1971,
+        "purpose": "Irrigation Palmeraies Tafilalet, Crues"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.25,
+          32.12
+        ]
+      },
+      "properties": {
+        "name": "Kaddoussa",
+        "river": "Kaddoussa",
+        "basin": "Guir",
+        "capacity_hm3": 224.0,
+        "height_m": 63,
+        "year": 2021,
+        "purpose": "Irrigation Oasis Guir, Eau Potable"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.58,
+          31.55
+        ]
+      },
+      "properties": {
+        "name": "Todgha",
+        "river": "Todgha",
+        "basin": "Ziz-Rheris",
+        "capacity_hm3": 33.0,
+        "height_m": 55,
+        "year": 2022,
+        "purpose": "Irrigation Oasis Tinghir, Crues"
+      }
+    }
+  ]
+}

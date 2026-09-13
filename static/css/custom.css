@@ -1,0 +1,241 @@
+/* ==========================================================================
+   HYDRO_WEB_APP — Thème Modern Organic (Palette Naturelle, Aérée & Claire)
+   ========================================================================== */
+
+/* Variables de couleur Modern Organic */
+:root {
+    --bg-warm: #faf8f5;
+    --bg-surface: #ffffff;
+    --bg-surface-elevated: #f5f2eb;
+    --border-soft: #e8e5df;
+    --border-subtle: #f0ede6;
+    
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    
+    --organic-teal: #0f766e;
+    --organic-teal-light: #f0fdfa;
+    --organic-blue: #0284c7;
+    --organic-blue-light: #f0f9ff;
+    --organic-sage: #15803d;
+    --organic-sage-light: #f0fdf4;
+    --organic-amber: #b45309;
+    --organic-amber-light: #fffbeb;
+    --organic-clay: #c2410c;
+    --organic-clay-light: #fff7ed;
+    --organic-rose: #be123c;
+    --organic-rose-light: #fff1f2;
+}
+
+/* Scrollbar Épurée & Naturelle */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1ede6;
+    border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Style de la Carte Leaflet en Thème Clair */
+.leaflet-container {
+    background-color: #f1ede6 !important;
+    font-family: 'Inter', sans-serif !important;
+}
+
+/* Popups Leaflet Modern Organic */
+.leaflet-popup-content-wrapper {
+    background: #ffffff !important;
+    color: var(--text-primary) !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03) !important;
+    backdrop-filter: blur(8px) !important;
+    padding: 2px !important;
+}
+
+.leaflet-popup-tip {
+    background: #ffffff !important;
+    box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Contrôles de Zoom Leaflet stylisés clairs */
+.leaflet-bar {
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06) !important;
+}
+
+.leaflet-bar a {
+    background-color: #ffffff !important;
+    color: #334155 !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    transition: all 0.15s ease !important;
+}
+
+.leaflet-bar a:hover {
+    background-color: #f8fafc !important;
+    color: #0284c7 !important;
+}
+
+/* Curseur cible crosshair de haute précision */
+.cursor-crosshair,
+.cursor-crosshair .leaflet-container,
+.cursor-crosshair .leaflet-grab,
+.cursor-crosshair .leaflet-interactive {
+    cursor: crosshair !important;
+}
+
+/* Pin interactif d'exutoire cible Modern Organic */
+.outlet-picker-pin {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    transition: transform 0.15s ease-out;
+}
+
+.outlet-picker-pin:active {
+    cursor: grabbing;
+    transform: scale(1.18);
+}
+
+.outlet-picker-pin-inner {
+    width: 32px;
+    height: 32px;
+    background: radial-gradient(circle at 35% 35%, #0284c7, #0369a1);
+    border: 3px solid #ffffff;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    box-shadow: 0 6px 16px rgba(2, 132, 199, 0.35), 0 0 0 5px rgba(2, 132, 199, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pin-float 2.2s ease-in-out infinite alternate;
+}
+
+.outlet-picker-pin-inner i {
+    transform: rotate(45deg);
+    font-size: 13px;
+    color: #ffffff;
+}
+
+@keyframes pin-float {
+    0% { transform: rotate(-45deg) translateY(0); }
+    100% { transform: rotate(-45deg) translateY(-5px); }
+}
+
+/* Pulsation exutoire snappé */
+@keyframes pulse-ring-organic {
+    0% {
+        transform: scale(0.6);
+        opacity: 0.9;
+    }
+    100% {
+        transform: scale(2.4);
+        opacity: 0;
+    }
+}
+
+.outlet-pulse {
+    position: relative;
+}
+
+.outlet-pulse::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border-radius: 50%;
+    background-color: rgba(2, 132, 199, 0.4);
+    animation: pulse-ring-organic 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+/* Panneaux rétractables & animations fluides */
+.sidebar-transition {
+    transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.drawer-transition {
+    transition: height 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Optimisation de la carte en plein écran */
+#leafletMap {
+    transition: all 0.25s ease;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Conteneur de graphique sans débordement */
+#hydrographCanvas {
+    max-width: 100% !important;
+    max-height: 100% !important;
+}
+
+/* Notifications Toast Modern Organic */
+.toast-slide-enter {
+    animation: toast-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes toast-in {
+    from {
+        opacity: 0;
+        transform: translateY(-16px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* GPU-optimized sidebar transitions */
+aside[x-show] {
+    will-change: transform, opacity;
+}
+
+/* Smooth fade-in for Leaflet vector overlays */
+.leaflet-overlay-pane path {
+    transition: opacity 0.4s ease, fill-opacity 0.4s ease;
+}
+
+/* Positionnement soigné du sélecteur de fonds de carte en haut à gauche */
+.leaflet-top.leaflet-left {
+    margin-top: 12px;
+    margin-left: 12px;
+}
+.leaflet-top.leaflet-left .leaflet-control-layers {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e8e5df;
+}
+
+/* Styles pour les marqueurs et popups des 45 grands barrages */
+.modern-dam-popup .leaflet-popup-content-wrapper {
+    border-radius: 14px;
+    padding: 0;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e7ff;
+}
+.custom-dam-marker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+

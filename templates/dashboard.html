@@ -1,0 +1,389 @@
+{% extends "base.html" %}
+
+{% block title %}Tableau de Bord — HYDRO_WEB_APP (WebGIS Hydrologique Maroc){% endblock %}
+
+{% block content %}
+<div class="flex-1 flex w-full h-full overflow-hidden relative bg-[#faf8f5]" x-data="{ layersMenuOpen: false }">
+
+    <!-- Volet Latéral Gauche : Contrôles, Délinéation & Attributs (Pliable & Fluide) -->
+    <aside 
+        x-show="sidebarOpen"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="-translate-x-full opacity-0"
+        x-transition:enter-end="translate-x-0 opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="translate-x-0 opacity-100"
+        x-transition:leave-end="-translate-x-full opacity-0"
+        class="w-80 sm:w-88 bg-[#faf8f5] border-r border-[#e8e5df] flex flex-col h-full z-20 shrink-0 shadow-lg overflow-y-auto custom-scrollbar text-slate-800"
+    >
+        <!-- En-tête du Volet avec Bouton de Repliage & Sélecteur de Mode -->
+        <div class="p-3 border-b border-[#e8e5df] space-y-2.5 bg-[#fdfcfb]">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <span class="w-2 h-2 rounded-full bg-teal-600"></span>
+                    <span class="text-xs font-bold uppercase tracking-wider text-teal-900 font-heading">Contrôles Hydrologiques</span>
+                </div>
+                <!-- Bouton Rétractable Volet -->
+                <button 
+                    @click="toggleSidebar()" 
+                    class="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition shadow-2xs" 
+                    title="Replier le volet pour maximiser la carte"
+                >
+                    <i class="fa-solid fa-angles-left text-[11px]"></i>
+                </button>
+            </div>
+            
+            <!-- Sélecteur d'Onglets Délinéation D8 / 9 Stations Clés du Maroc -->
+            <div class="grid grid-cols-2 gap-1 bg-[#ede8df] p-1 rounded-xl text-xs font-medium">
+                <button 
+                    @click="setMode('delineate')" 
+                    :class="activeMode === 'delineate' ? 'bg-white text-teal-900 font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900'"
+                    class="py-1.5 px-2 rounded-lg transition text-center flex items-center justify-center space-x-1.5"
+                >
+                    <i class="fa-solid fa-bullseye text-[11px] text-teal-700"></i>
+                    <span>Délinéation D8</span>
+                </button>
+                <button 
+                    @click="setMode('reference')" 
+                    :class="activeMode === 'reference' ? 'bg-white text-teal-900 font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900'"
+                    class="py-1.5 px-2 rounded-lg transition text-center flex items-center justify-center space-x-1.5"
+                >
+                    <i class="fa-solid fa-layer-group text-[11px] text-teal-700"></i>
+                    <span>9 Stations Clés</span>
+                </button>
+            </div>
+
+            <!-- Mode 1 : Délinéation Spatiale (pyflwdir) -->
+            <div x-show="activeMode === 'delineate'" class="space-y-2.5">
+                <div class="flex items-center justify-between">
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-teal-800 flex items-center">
+                        <i class="fa-solid fa-crosshairs mr-1.5 text-teal-700"></i> Exutoire Cible (Maroc)
+                    </span>
+                    <span class="text-[9px] px-2 py-0.5 rounded-full bg-teal-50 border border-teal-200 text-teal-700 font-mono">D8 HydroSHEDS</span>
+                </div>
+                
+                <p class="text-[11px] text-slate-600 leading-relaxed">
+                    Cliquez sur la carte ou glissez le repère <span class="text-teal-700 font-bold">🎯</span> pour sélectionner votre exutoire :
+                </p>
+
+                <!-- Coordonnées d'entrée -->
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-[10px] text-slate-600 block mb-0.5 font-medium">Latitude (°N)</label>
+                        <input type="number" step="0.0001" x-model="inputLat" @input="onCoordinateInput()" placeholder="ex: 34.583" class="w-full bg-white border border-[#d8d3c8] rounded-lg px-2.5 py-1.5 text-xs text-slate-900 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 font-mono shadow-xs">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-slate-600 block mb-0.5 font-medium">Longitude (°W)</label>
+                        <input type="number" step="0.0001" x-model="inputLon" @input="onCoordinateInput()" placeholder="ex: -5.291" class="w-full bg-white border border-[#d8d3c8] rounded-lg px-2.5 py-1.5 text-xs text-slate-900 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 font-mono shadow-xs">
+                    </div>
+                </div>
+
+                <!-- Indicateur de validité de couverture territoriale -->
+                <div class="flex items-center justify-between px-2.5 py-1 rounded-lg bg-white border border-[#e8e5df] text-[10px] font-mono shadow-xs">
+                    <span class="text-slate-500">Couverture MNT :</span>
+                    <span x-show="isWithinMorocco(inputLat, inputLon)" class="text-emerald-700 flex items-center font-semibold">
+                        <i class="fa-solid fa-circle-check mr-1 text-emerald-600"></i> Zone Maroc Prête
+                    </span>
+                    <span x-show="!isWithinMorocco(inputLat, inputLon)" class="text-rose-700 flex items-center font-semibold">
+                        <i class="fa-solid fa-triangle-exclamation mr-1 text-rose-600"></i> Hors Zone MNT
+                    </span>
+                </div>
+
+                <!-- Sélecteur de Début des 10 Ans de Forçage ERA5-Land -->
+                <div class="bg-white border border-[#d8d3c8] rounded-xl p-2.5 shadow-xs space-y-1.5">
+                    <div class="flex items-center justify-between">
+                        <label class="text-[11px] font-bold text-teal-900 flex items-center">
+                            <i class="fa-regular fa-calendar-check mr-1.5 text-teal-700"></i> Forçage ERA5-Land (10 ans)
+                        </label>
+                        <span class="text-[9px] font-mono px-2 py-0.5 rounded-full bg-teal-50 border border-teal-200 text-teal-800 font-semibold"
+                              x-text="forcingStartYear + ' → ' + (parseInt(forcingStartYear) + 9)">
+                        </span>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-[10px] text-slate-600 font-medium">Année de début :</span>
+                            <span class="text-[9px] text-slate-400 font-mono">10 ans complets</span>
+                        </div>
+                        <select 
+                            x-model.number="forcingStartYear" 
+                            class="w-full bg-[#faf8f5] hover:bg-white border border-[#d8d3c8] rounded-lg px-2.5 py-1.5 text-xs text-slate-900 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 font-mono shadow-xs cursor-pointer transition"
+                        >
+                            <template x-for="yr in availableForcingYears" :key="yr">
+                                <option :value="yr" x-text="yr + '  (' + yr + ' – ' + (yr + 9) + ')'"></option>
+                            </template>
+                        </select>
+                    </div>
+                    <p class="text-[9.5px] text-slate-500 leading-tight">
+                        Chronique de 3 652 jours. L'hydrogramme permettra d'explorer l'intérieur de cet intervalle.
+                    </p>
+                </div>
+
+                <!-- Boutons d'Action Principaux -->
+                <div class="space-y-1.5">
+                    <button @click="triggerDelineation()" :disabled="isLoading || !isWithinMorocco(inputLat, inputLon)" class="w-full py-2.5 bg-teal-700 hover:bg-teal-800 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl text-xs font-semibold shadow-xs hover:shadow transition flex items-center justify-center space-x-2">
+                        <i class="fa-solid" :class="isLoading ? 'fa-spinner fa-spin' : 'fa-wand-magic-sparkles'"></i>
+                        <span x-text="isLoading ? 'Calcul & Simulation LSTM...' : 'Délinéer le Bassin Versant'"></span>
+                    </button>
+
+                    <div class="flex items-center justify-between space-x-2">
+                        <button @click="centerOnPicker()" class="flex-1 py-1.5 px-2 bg-white hover:bg-slate-50 text-slate-700 rounded-lg text-[11px] transition flex items-center justify-center space-x-1.5 border border-[#d8d3c8] shadow-xs">
+                            <i class="fa-solid fa-crosshairs text-teal-700 text-[11px]"></i>
+                            <span>Centrer sur l'exutoire</span>
+                        </button>
+                        <button @click="clearDelineation()" class="py-1.5 px-3 bg-white hover:bg-rose-50 text-slate-600 hover:text-rose-700 rounded-lg text-[11px] transition flex items-center justify-center space-x-1 border border-[#d8d3c8] shadow-xs" title="Effacer le tracé et libérer le stockage">
+                            <i class="fa-solid fa-trash-can text-[11px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Option délinéation automatique au clic -->
+                <div class="pt-1 flex items-center justify-between text-[11px] text-slate-600 border-t border-[#e8e5df]">
+                    <label class="flex items-center space-x-2 cursor-pointer select-none">
+                        <input type="checkbox" x-model="autoDelineateOnClick" class="rounded border-[#d8d3c8] text-teal-600 focus:ring-0">
+                        <span>Délinéer automatiquement au clic</span>
+                    </label>
+                    <span class="text-[10px] text-slate-400" :title="autoDelineateOnClick ? 'Calcule dès que vous cliquez' : 'Place d\'abord l\'exutoire'">
+                        <i class="fa-solid fa-circle-info text-teal-600"></i>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Mode 2 : 9 Stations de Jaugeage Certifiées (Maroc) -->
+            <div x-show="activeMode === 'reference'" class="space-y-2.5">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold uppercase tracking-wider text-teal-800 flex items-center">
+                        <i class="fa-solid fa-layer-group mr-1.5 text-teal-700"></i> 9 Stations de Jaugeage (Maroc)
+                    </span>
+                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-teal-50 text-teal-800 font-mono border border-teal-200">Loukkos & OER</span>
+                </div>
+
+                <!-- Liste des 9 Stations du Maroc -->
+                <div class="space-y-1.5 max-h-64 overflow-y-auto custom-scrollbar pr-1">
+                    {% for st in morocco_stations %}
+                    <button @click="selectCatchment('{{ st.code }}')" class="w-full text-left p-2 rounded-xl border border-[#e8e5df] hover:border-teal-400 bg-white hover:bg-teal-50/50 transition flex items-center justify-between text-xs shadow-xs">
+                        <div>
+                            <div class="font-semibold text-slate-800 flex items-center space-x-1.5">
+                                <span>{{ st.name }}</span>
+                                <span class="text-[10px] font-mono px-1.5 py-0.2 bg-slate-100 text-slate-600 rounded">{{ st.code }}</span>
+                            </div>
+                            <div class="text-[10px] text-slate-500">{{ st.basin }} ({{ st.river }}) • {{ st.area_km2|floatformat:0 }} km²</div>
+                        </div>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded-full {% if st.status == 'valid' %}bg-emerald-50 text-emerald-700 border border-emerald-200{% elif st.status == 'warning' %}bg-amber-50 text-amber-700 border border-amber-200{% else %}bg-rose-50 text-rose-700 border border-rose-200{% endif %}">
+                            KGE {{ st.kge|floatformat:2 }}
+                        </span>
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Composants Réactifs Pliables : Diagnostic d'Enveloppe & Audit Anthropique & 8 Attributs -->
+        <div class="p-3 space-y-2.5 flex-1">
+            {% include "components/envelope_card.html" %}
+            {% include "components/audit_card.html" %}
+            {% include "components/attributes_table.html" %}
+        </div>
+    </aside>
+
+    <!-- Espace Central : Carte Leaflet Plein Écran Flexible & Tiroir Hydrogramme -->
+    <section class="flex-1 flex flex-col h-full overflow-hidden relative">
+        
+        <!-- Bouton Flottant Élégant pour Rouvrir le Volet quand il est Rétracté -->
+        <button 
+            x-show="!sidebarOpen" 
+            @click="toggleSidebar()" 
+            class="absolute top-3.5 left-3.5 z-30 bg-white/95 border border-[#e8e5df] hover:bg-slate-50 hover:border-teal-300 text-slate-700 px-3.5 py-2 rounded-xl shadow-md backdrop-blur-md flex items-center space-x-2 text-xs font-semibold transition group"
+            title="Afficher les contrôles & attributs"
+        >
+            <i class="fa-solid fa-sliders text-teal-700 group-hover:rotate-45 transition-transform"></i>
+            <span>Contrôles</span>
+        </button>
+
+        <!-- Conteneur Carte Leaflet avec Espace Maximal Plein Écran -->
+        <div class="flex-1 relative w-full h-full min-h-0">
+            <div id="leafletMap" class="w-full h-full z-10"></div>
+
+            <!-- Loading Overlay (pendant la délinéation / simulation LSTM) -->
+            <div x-show="isLoading" 
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 class="absolute inset-0 flex items-center justify-center z-30 bg-white/60 backdrop-blur-sm" style="display: none;">
+                <div class="flex flex-col items-center space-y-3 bg-white/90 px-6 py-4 rounded-2xl border border-[#e8e5df] shadow-xl">
+                    <div class="w-10 h-10 border-[3px] border-teal-200 border-t-teal-600 rounded-full animate-spin"></div>
+                    <span class="text-xs font-semibold text-teal-800">Calcul LSTM en cours...</span>
+                    <span class="text-[10px] text-slate-500">Délinéation + Attributs + Inférence PyTorch</span>
+                </div>
+            </div>
+
+            <!-- Toast Notification Flottante Modern Organic -->
+            <div x-show="toast.visible" 
+                 x-transition:enter="transition ease-out duration-300 transform"
+                 x-transition:enter-start="-translate-y-4 opacity-0 scale-95"
+                 x-transition:enter-end="translate-y-0 opacity-100 scale-100"
+                 x-transition:leave="transition ease-in duration-200 transform"
+                 x-transition:leave-start="translate-y-0 opacity-100 scale-100"
+                 x-transition:leave-end="-translate-y-4 opacity-0 scale-95"
+                 class="absolute top-4 left-1/2 -translate-x-1/2 z-50 max-w-md w-full px-4 pointer-events-auto"
+                 style="display: none;">
+                <div class="p-3 rounded-2xl border shadow-xl backdrop-blur-md text-xs flex items-start space-x-3 bg-white"
+                     :class="{
+                         'border-emerald-300 text-emerald-900': toast.type === 'success',
+                         'border-amber-300 text-amber-900': toast.type === 'warning',
+                         'border-rose-300 text-rose-900': toast.type === 'error',
+                         'border-teal-300 text-slate-800': toast.type === 'info'
+                     }">
+                    <div class="mt-0.5 text-base shrink-0">
+                        <i class="fa-solid" :class="{
+                            'fa-circle-check text-emerald-600': toast.type === 'success',
+                            'fa-triangle-exclamation text-amber-600': toast.type === 'warning',
+                            'fa-circle-xmark text-rose-600': toast.type === 'error',
+                            'fa-circle-info text-teal-700': toast.type === 'info'
+                        }"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="font-bold text-xs" x-text="toast.title"></div>
+                        <div class="text-[11px] opacity-90 mt-0.5" x-text="toast.message"></div>
+                        <div x-show="toast.hint" class="text-[10px] text-slate-500 mt-1 font-mono italic" x-text="toast.hint"></div>
+                    </div>
+                    <button @click="closeToast()" class="opacity-60 hover:opacity-100 transition p-1 text-slate-500">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Barre d'outils Flottante Rétractable sur la Carte (Top Right) -->
+            <div class="absolute top-3.5 right-3.5 z-20 flex flex-col items-end space-y-2">
+                <!-- Bouton Bascule Menu Couches SIG -->
+                <div class="flex items-center space-x-1 bg-white/95 border border-[#e8e5df] rounded-2xl p-1 shadow-md backdrop-blur-md">
+                    <button 
+                        @click="layersMenuOpen = !layersMenuOpen" 
+                        class="px-2.5 py-1.5 rounded-xl text-slate-700 hover:bg-slate-100 text-xs font-semibold transition flex items-center space-x-1.5"
+                        :class="layersMenuOpen ? 'bg-teal-50 text-teal-900' : ''"
+                        title="Afficher/Masquer le sélecteur de couches SIG"
+                    >
+                        <i class="fa-solid fa-layer-group text-teal-700"></i>
+                        <span>Couches SIG</span>
+                        <i class="fa-solid fa-chevron-down text-[9px] text-slate-400 transition-transform duration-200" :class="layersMenuOpen ? 'rotate-180' : ''"></i>
+                    </button>
+
+                    <div class="w-px h-4 bg-slate-200"></div>
+
+                    <!-- Bouton Centrer Maroc -->
+                    <button @click="flyToRegion('maroc')" class="px-2.5 py-1.5 hover:bg-slate-100 rounded-xl text-slate-700 text-xs font-medium transition flex items-center space-x-1" title="Recentrer la carte sur le Maroc">
+                        <span>🇲🇦</span>
+                        <span class="hidden sm:inline">Maroc</span>
+                    </button>
+
+                    <!-- Bouton Effacer Délinéation (Nettoyage Écran & Stockage) -->
+                    <button @click="clearDelineation()" class="px-2 py-1.5 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-xl text-rose-700 text-xs transition" title="Effacer le tracé et libérer le stockage">
+                        <i class="fa-solid fa-trash-can text-[11px]"></i>
+                    </button>
+                </div>
+
+                <!-- Carte Déroulante Pliable du Sélecteur de Couches -->
+                <div 
+                    x-show="layersMenuOpen" 
+                    @click.away="layersMenuOpen = false"
+                    x-transition:enter="transition ease-out duration-200 transform"
+                    x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                    x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                    x-transition:leave="transition ease-in duration-150 transform"
+                    x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                    x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                    class="bg-white/95 border border-[#e8e5df] rounded-2xl p-3 shadow-xl backdrop-blur-md text-xs w-64 space-y-2.5"
+                    style="display: none;"
+                >
+                    <div class="font-bold text-[10px] uppercase tracking-wider text-slate-500 pb-1 border-b border-[#e8e5df] flex items-center justify-between">
+                        <span>Couches Hydrographiques Maroc</span>
+                        <i class="fa-solid fa-map text-teal-700"></i>
+                    </div>
+                    
+                    <label class="flex items-center space-x-2 text-slate-700 hover:text-slate-900 cursor-pointer">
+                        <input type="checkbox" x-model="layers.morocco_dams" @change="toggleLayer('morocco', 'catchments_new_stations', layers.morocco_dams)" class="rounded border-[#d8d3c8] text-teal-600 focus:ring-0">
+                        <span class="font-medium">9 Stations de Jaugeage</span>
+                    </label>
+                    <label class="flex items-center space-x-2 text-slate-700 hover:text-slate-900 cursor-pointer">
+                        <input type="checkbox" x-model="layers.morocco_major" @change="toggleLayer('morocco', 'major_basins', layers.morocco_major)" class="rounded border-[#d8d3c8] text-teal-600 focus:ring-0">
+                        <span>Grands Bassins Versants (45)</span>
+                    </label>
+                    <label class="flex items-center space-x-2 text-slate-700 hover:text-slate-900 cursor-pointer">
+                        <input type="checkbox" x-model="layers.morocco_lev06" @change="toggleLayer('morocco', 'subbasins_lev06', layers.morocco_lev06)" class="rounded border-[#d8d3c8] text-teal-600 focus:ring-0">
+                        <span>Sous-bassins HydroSHEDS Lev06 (111)</span>
+                    </label>
+                    <label class="flex items-center space-x-2 text-slate-700 hover:text-slate-900 cursor-pointer pt-1 border-t border-[#e8e5df]">
+                        <input type="checkbox" x-model="layers.morocco_rivers" @change="toggleRiversLayer(layers.morocco_rivers)" class="rounded border-[#d8d3c8] text-sky-600 focus:ring-0">
+                        <span class="font-medium text-sky-900 flex items-center">
+                            <i class="fa-solid fa-water text-sky-600 mr-1.5"></i> Réseau des Oueds (HydroRIVERS)
+                        </span>
+                    </label>
+                    <label class="flex items-center space-x-2 text-slate-700 hover:text-slate-900 cursor-pointer pt-1 border-t border-[#e8e5df]">
+                        <input type="checkbox" x-model="layers.morocco_dams_all" @change="toggleAllDamsLayer(layers.morocco_dams_all)" class="rounded border-[#d8d3c8] text-indigo-600 focus:ring-0">
+                        <span class="font-medium text-indigo-950 flex items-center">
+                            <i class="fa-solid fa-landmark-dome text-indigo-600 mr-1.5"></i> Grands Barrages du Maroc (45)
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Indicateur HUD de Coordonnées au Bas de la Carte (Décalé à gauche pour laisser place aux fonds de carte) -->
+            <div class="absolute bottom-3 left-14 z-20 flex items-center space-x-2 pointer-events-none">
+                <div class="bg-white/95 border border-[#e8e5df] px-3 py-1.5 rounded-xl text-[10px] font-mono backdrop-blur-md flex items-center space-x-2.5 shadow-xs text-slate-700">
+                    <span class="text-teal-700 font-bold flex items-center">
+                        <i class="fa-solid fa-crosshairs mr-1"></i> Curseur :
+                    </span>
+                    <span class="text-slate-900 font-semibold" x-text="(cursorLat || '--') + '°N, ' + (cursorLon || '--') + '°W'"></span>
+                    <span class="text-slate-300">|</span>
+                    <span :class="cursorInMorocco ? 'text-emerald-700' : 'text-amber-700'" class="font-semibold flex items-center">
+                        <span class="w-1.5 h-1.5 rounded-full mr-1" :class="cursorInMorocco ? 'bg-emerald-500' : 'bg-amber-500'"></span>
+                        <span x-text="cursorInMorocco ? 'Zone Maroc' : 'Hors Zone'"></span>
+                    </span>
+                </div>
+
+                <div class="hidden lg:flex bg-white/95 border border-[#e8e5df] px-3 py-1.5 rounded-xl text-[10px] text-slate-600 backdrop-blur-md items-center space-x-1.5 shadow-xs">
+                    <i class="fa-solid fa-lightbulb text-amber-500 text-xs"></i>
+                    <span>Cliquez ou glissez l'exutoire 🎯 sur la carte pour délinéer précisément le bassin versant.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panneau Inférieur Réservé à l'Hydrogramme (Tiroir Pliable & Responsive) -->
+        <div 
+            class="border-t border-[#e8e5df] bg-white shrink-0 p-2 overflow-hidden shadow-sm transition-all duration-300 ease-in-out relative z-20"
+            :class="{
+                'h-11 hover:bg-slate-50': chartDrawerState === 'minimized',
+                'h-[340px] sm:h-[360px]': chartDrawerState === 'standard',
+                'h-[75vh]': chartDrawerState === 'expanded'
+            }"
+        >
+            <!-- Bandelette Minimisée quand Réduit (Clic direct sans propagation parasite) -->
+            <div 
+                x-show="chartDrawerState === 'minimized'" 
+                @click="setChartDrawerState('standard')"
+                class="h-full flex flex-col items-center justify-center select-none cursor-pointer"
+            >
+                <div class="w-8 h-1 rounded-full bg-slate-300 mb-1"></div>
+                <div class="flex items-center justify-between px-2 w-full text-xs">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-chart-line text-teal-700"></i>
+                    <span class="font-semibold text-slate-800">Hydrogramme LSTM</span>
+                    <span class="text-[10px] text-slate-500 font-mono" x-show="currentBasinName" x-text="'(' + currentBasinName + ')'"></span>
+                </div>
+                <div class="flex items-center space-x-1.5 text-slate-500 hover:text-teal-800 text-[11px] font-medium">
+                    <span>Ouvrir l'hydrogramme</span>
+                    <i class="fa-solid fa-chevron-up text-[10px]"></i>
+                </div>
+                </div>
+            </div>
+
+            <!-- Composant Complet quand Ouvert -->
+            <div x-show="chartDrawerState !== 'minimized'" class="h-full flex flex-col">
+                {% include "components/hydrograph_chart.html" %}
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

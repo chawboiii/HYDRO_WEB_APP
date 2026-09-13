@@ -1,0 +1,10 @@
+code,name,basin,river,lat,lon,area_km2,elev_mean,slope_mean,forest_frac,p_mean,pet_mean,aridity,frac_snow,p_seasonality,kge_zero_shot,nse_zero_shot,r2_zero_shot,kge_bias,kge_finetuned,p_factor_opt,envelope_verdict
+LOUK_01,Pont d'Oughane,Loukkos,Oughane,34.9643,-5.5373,300.8,450.0,14.5,0.28,2.536,3.65,1.439,0.0,1.939,0.638,0.5,0.525,0.813,0.55,0.8,Conforme (Dans l'enveloppe)
+LOUK_02,Pont M'Ghar,Loukkos,M'ghar,34.9885,-5.5115,82.3,530.0,15.2,0.32,2.767,3.6,1.301,0.0,1.939,-3.352,-5.1,0.35,-2.368,-0.944,0.8,Conforme (Biais pluvio ERA5-Land)
+LOUK_04,M'Douar,Loukkos,Loukkos,34.9993,-5.5156,659.4,410.0,13.8,0.25,2.777,3.428,1.234,0.0,1.88,0.833,0.72,0.74,0.641,0.68,0.8,Conforme (Dans l'enveloppe)
+LOUK_05,Boufarah,Loukkos,Loukkos,35.0418,-5.4631,261.8,390.0,12.6,0.22,2.857,3.446,1.206,0.0,1.89,0.752,0.78,0.79,0.752,0.83,1.0,Conforme (Dans l'enveloppe)
+OER_01,Addammaghène,Oum Er Rbia,Lakhdar,31.71,-6.739,1039.8,1820.0,14.1,0.06,1.751,2.901,1.657,0.1586,0.672,-0.403,-0.85,0.08,-0.066,0.156,2.6,Non conforme (Neige & Sous-estimation P)
+OER_02,Sgatt,Oum Er Rbia,Bernat,31.81,-6.6865,435.6,1760.0,13.5,0.07,1.881,3.338,1.774,0.0616,0.841,-0.238,-0.62,0.11,-1.094,0.21,1.7,Non conforme (Relief Atlasique & Karst)
+OER_03,Zaouit Ahançal,Oum Er Rbia,Ahançal,31.8317,-6.104,182.2,2150.0,16.2,0.04,1.42,2.73,1.922,0.2142,0.653,-0.664,-1.25,0.015,-0.303,-0.094,2.6,Non conforme (Haute montagne & Karst nival)
+OER_04,Tillouguite,Oum Er Rbia,Asif Melloul,32.0184,-6.2182,2501.4,2603.0,17.8,0.03,1.502,2.969,1.977,0.2025,0.704,-0.135,-0.38,0.28,-0.087,0.53,1.4,Non conforme en Zero-Shot (Gagnant Fine-Tuning +0.53)
+OER_05,Tizi n'Isly,Oum Er Rbia,Ouirine,32.4109,-5.7273,271.0,1980.0,15.0,0.05,1.845,3.366,1.825,0.0793,0.994,-0.368,-0.79,0.15,0.266,0.44,3.0,Non conforme en Zero-Shot (Gagnant Biais/FT +0.44)

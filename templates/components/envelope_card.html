@@ -1,0 +1,85 @@
+<!-- Carte Diagnostic d'Enveloppe Opérationnelle (Modern Organic - Chapitre 5 PFE) -->
+<div x-data="{ open: true }" class="bg-white border border-[#e8e5df] rounded-2xl p-3 shadow-xs transition-all">
+    <div class="flex items-center justify-between cursor-pointer select-none" @click="open = !open">
+        <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-shield-halved text-teal-700 text-xs"></i>
+            <h3 class="font-heading font-semibold text-xs tracking-wider uppercase text-slate-700">Enveloppe de Validité</h3>
+        </div>
+        <div class="flex items-center space-x-2">
+            <template x-if="currentEnvelope">
+                <span :class="{
+                    'bg-emerald-50 border-emerald-200 text-emerald-700': currentEnvelope.overall_status === 'valid',
+                    'bg-amber-50 border-amber-200 text-amber-700': currentEnvelope.overall_status === 'warning',
+                    'bg-rose-50 border-rose-200 text-rose-700': currentEnvelope.overall_status === 'danger'
+                }" class="px-2 py-0.5 rounded-full border text-[10px] font-bold uppercase tracking-wider flex items-center shadow-xs">
+                    <span class="w-1.5 h-1.5 rounded-full mr-1.5" :class="{
+                        'bg-emerald-500': currentEnvelope.overall_status === 'valid',
+                        'bg-amber-500': currentEnvelope.overall_status === 'warning',
+                        'bg-rose-500': currentEnvelope.overall_status === 'danger'
+                    }"></span>
+                    <span x-text="currentEnvelope.overall_status === 'valid' ? 'Conforme' : (currentEnvelope.overall_status === 'warning' ? 'Intermédiaire' : 'Hors Domaine')"></span>
+                </span>
+            </template>
+            <button type="button" class="w-5 h-5 flex items-center justify-center text-slate-400 hover:text-slate-600 transition">
+                <i class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200" :class="open ? 'rotate-0' : '-rotate-90'"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Contenu Accordéon Pliable -->
+    <div x-show="open" x-collapse class="mt-2.5">
+
+    <template x-if="currentEnvelope">
+        <div class="space-y-2.5 text-xs">
+            <!-- Verdict synthétique -->
+            <p class="text-slate-700 leading-relaxed bg-[#faf8f5] p-2.5 rounded-xl border border-[#e8e5df] text-[11px]" x-text="currentEnvelope.verdict_text"></p>
+
+            <!-- 2 Critères Physiques Majeurs -->
+            <div class="grid grid-cols-2 gap-2">
+                <!-- Superficie -->
+                <div class="bg-[#faf8f5] p-2 rounded-xl border border-[#e8e5df]">
+                    <div class="flex justify-between items-center text-[10px] text-slate-500 mb-1">
+                        <span class="font-medium">Superficie</span>
+                        <span class="font-mono text-slate-800 font-bold" x-text="currentEnvelope.area_km2 + ' km²'"></span>
+                    </div>
+                    <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                        <div class="h-full rounded-full transition-all duration-500"
+                             :style="'width: ' + Math.min(100, Math.max(5, (currentEnvelope.area_km2 / 3500) * 100)) + '%'"
+                             :class="currentEnvelope.area_valid ? 'bg-teal-600' : 'bg-rose-500'"></div>
+                    </div>
+                    <div class="flex justify-between text-[9px] text-slate-400 mt-1 font-mono">
+                        <span>20 km²</span>
+                        <span class="text-slate-500">20-3500</span>
+                        <span>3 500 km²</span>
+                    </div>
+                </div>
+
+                <!-- Indice d'Aridité -->
+                <div class="bg-[#faf8f5] p-2 rounded-xl border border-[#e8e5df]">
+                    <div class="flex justify-between items-center text-[10px] text-slate-500 mb-1">
+                        <span class="font-medium">Aridité (PET/P)</span>
+                        <span class="font-mono text-slate-800 font-bold" x-text="currentEnvelope.aridity"></span>
+                    </div>
+                    <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                        <div class="h-full rounded-full transition-all duration-500"
+                             :style="'width: ' + Math.min(100, Math.max(5, (currentEnvelope.aridity / 4.0) * 100)) + '%'"
+                             :class="currentEnvelope.aridity <= 1.6 ? 'bg-emerald-600' : (currentEnvelope.aridity <= 2.2 ? 'bg-amber-500' : 'bg-rose-500')"></div>
+                    </div>
+                    <div class="flex justify-between text-[9px] text-slate-400 mt-1 font-mono">
+                        <span class="text-emerald-700">&le;1.6</span>
+                        <span class="text-amber-700">&le;2.2</span>
+                        <span class="text-rose-700">&gt;2.2</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template x-if="!currentEnvelope">
+        <div class="text-center py-4 text-slate-400 text-xs bg-[#faf8f5] rounded-xl border border-dashed border-[#e8e5df]">
+            <i class="fa-solid fa-location-dot text-teal-700 text-base mb-1 block"></i>
+            <p class="text-slate-600">Pointez un exutoire sur la carte pour afficher le diagnostic.</p>
+        </div>
+    </template>
+    </div>
+</div>
